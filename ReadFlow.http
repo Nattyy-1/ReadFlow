@@ -19,3 +19,9 @@ Content-Type: application/json
   "password": "12345678",
   "username": "adfNate"
 }
+
+
+### Get a user profile GET /API/AUTH/ME
+
+GET http://localhost:5000/api/auth/me HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczNzg0MDExLCJleHAiOjE3NzQzODg4MTF9.tuSHf75j_YTMIuvJHF-VVB8lpmNvGV8hQSfa8L0yzhE

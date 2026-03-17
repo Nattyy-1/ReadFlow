@@ -86,6 +86,23 @@ class AuthService {
       throw err;
     }
   }
+
+  async getMe(userId) {
+    try {
+      const user = await prisma.user.findFirst({
+        where: {
+          id: parseInt(userId)
+        }
+      });
+
+      if (!user) throw new Error("User not found");
+
+      const { password: _, ...userWithoutPassword } = user;
+      return { user: userWithoutPassword };
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 export default new AuthService();

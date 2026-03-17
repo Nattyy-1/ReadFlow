@@ -47,6 +47,17 @@ class authController {
       return res.status(status).json({ message: error.message || "Internal Server Error" });
     }
   }
+
+  async getMe(req, res) {
+    try {
+      const userId = req.user.id;
+
+      const result = await authService.getMe(userId);
+      return res.status(200).json({ result });
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error " });
+    }
+  }
 }
 
 export default new authController();
