@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// 1. User Model
+model User {
+  id        Int        @id @default(autoincrement())
+  username  String     @unique
+  password  String
+  email     String     @unique
+  createdAt DateTime   @default(now())
+  
+  // Relation: A user can have many books on their shelf
+  userBooks UserBook[]
+}
+
+// 2. Global Book Model
+model Book {
+  id          Int        @id @default(autoincrement())
+  googleId    String     @unique
+  title       String
+  author      String
+  pageCount   Int
+  description String?
+  thumbnail   String
+  category    String?
+  
+  // Relation: A global book can be on many users' shelves
+  userBooks   UserBook[]
+}
+
+// 3. The Join Table (The "Shelf")
+model UserBook {
+  id          Int              @id @default(autoincrement())
+  status      BookStatus       @default(WANT_TO_READ)
+  currentPage Int              @default(0)
+  rating      Int?
+  review      String?
+  startDate   DateTime?
+  endDate     DateTime?
+
+  // Relationships
+  userId      Int
+  user        User             @relation(fields: [userId], references: [id])
+  bookId      Int
+  book        Book             @relation(fields: [bookId], references: [id])
+  
+  // Relation: One book on a user's shelf can have many reading sessions
+  sessions    ReadingSession[]
+
+  @@unique([userId, bookId]) // Prevents a user from adding the same book twice
+}
+
+// 4. The Session Model (The Timer)
+model ReadingSession {
+  id         Int      @id @default(autoincrement())
+  startTime  DateTime @default(now())
+  endTime    DateTime?
+  pagesRead  Int      @default(0)
+  duration   Int      @default(0) // Duration in seconds
+
+  // Relationship
+  userBookId Int
+  userBook   UserBook @relation(fields: [userBookId], references: [id])
+}
+
+// Enums for status
+enum BookStatus {
+  WANT_TO_READ
+  READING
+  COMPLETED
+}

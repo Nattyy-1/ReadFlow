@@ -1,0 +1,21 @@
+### Register a new User POST /API/AUTH/REGISTER
+
+POST http://localhost:5000/api/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "testn@gmail.com",
+  "password": "12345678",
+  "username": "adfNate"
+}
+
+
+### Login a user POST /API/AUTH/REGISTER
+
+POST http://localhost:5000/api/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "password": "12345678",
+  "username": "adfNate"
+}
