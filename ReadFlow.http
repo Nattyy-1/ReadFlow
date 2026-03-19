@@ -25,3 +25,13 @@ Content-Type: application/json
 
 GET http://localhost:5000/api/auth/me HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczNzg0MDExLCJleHAiOjE3NzQzODg4MTF9.tuSHf75j_YTMIuvJHF-VVB8lpmNvGV8hQSfa8L0yzhE
+
+
+### Send a password reset token to the user POST /API/AUTH/FORGOT-PASSWORD
+
+POST http://localhost:5000/api/auth/forgot-password HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "testn@gmail.com"
+}

@@ -19,6 +19,9 @@ model User {
   password  String
   email     String     @unique
   createdAt DateTime   @default(now())
+
+  resetToken  String?
+  resetTokenExpires DateTime?
   
   // Relation: A user can have many books on their shelf
   userBooks UserBook[]

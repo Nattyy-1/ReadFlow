@@ -1,6 +1,8 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import { prisma } from '../prismaClient.js';
+import sendEmail from '../utils/sendEmail.js';
 
 class AuthService {
   constructor() {
@@ -102,6 +104,48 @@ class AuthService {
     } catch (err) {
       throw err;
     }
+  }
+
+  async processPasswordReset(email) {
+    const user = await prisma.user.findUnique({ // findUnique is faster for @unique fields
+      where: { email }
+    });
+
+    if (!user) return;
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    const hashedResetToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+
+    const tokenExpiry = new Date(Date.now() + 10 * 60 * 1000);
+
+    await prisma.user.update({
+      where: { email },
+      data: {
+        resetToken: hashedResetToken, // Save the HASH
+        resetTokenExpires: tokenExpiry // Save as a Date object
+      }
+    });
+
+    const resetUrl = `https://readflow.com/reset-password?token=${resetToken}&email=${email}`;
+
+    const message = `
+      You requested a password reset for your ReadFlow account.
+
+      Please click the link below to reset your password (valid for 10 minutes):
+      ${resetUrl}
+
+      If you did not request this, please ignore this email.
+    `.trim();
+
+    await sendEmail({
+      email: user.email,
+      subject: 'ReadFlow Password Reset',
+      message: message,
+    });
   }
 }
 

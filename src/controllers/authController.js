@@ -58,6 +58,32 @@ class authController {
       return res.status(500).json({ message: "Internal Server Error " });
     }
   }
+
+  async sendResetToken(req, res) {
+    try {
+      const { email } = req.body;
+
+      if (!email) {
+        return res.status(400).json({ message: "Email is required" });
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: "Invalid email format" });
+      }
+
+      await authService.processPasswordReset(email.toLowerCase());
+
+      return res.status(200).json({
+        message: "If an account exists with this email, a reset token has been sent."
+      });
+
+    } catch (error) {
+      console.error("Forgot Password Error:", error);
+      // We still return 200 or 500? Usually 500 for actual server crashes
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
 }
 
 export default new authController();
