@@ -91,16 +91,14 @@ class AuthService {
 
   async getMe(userId) {
     try {
-      const user = await prisma.user.findFirst({
-        where: {
-          id: parseInt(userId)
-        }
+      const user = await prisma.user.findUnique({
+        where: { id: parseInt(userId) }
       });
 
       if (!user) throw new Error("User not found");
 
-      const { password: _, ...userWithoutPassword } = user;
-      return { user: userWithoutPassword };
+      const { password: _, resetToken: __, resetTokenExpires: ___, ...userWithoutSensitiveData } = user;
+      return { user: userWithoutSensitiveData };
     } catch (err) {
       throw err;
     }

@@ -24,7 +24,7 @@ Content-Type: application/json
 ### Get a user profile GET /API/AUTH/ME
 
 GET http://localhost:5000/api/auth/me HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczNzg0MDExLCJleHAiOjE3NzQzODg4MTF9.tuSHf75j_YTMIuvJHF-VVB8lpmNvGV8hQSfa8L0yzhE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTM1NTAzLCJleHAiOjE3NzQ1NDAzMDN9.S6yCaft7SVG3XTB6iY9S3_C04V8p7mjl7sEbI0NyvTg
 
 
 ### Send a password reset token to the user POST /API/AUTH/FORGOT-PASSWORD
@@ -58,3 +58,9 @@ Content-Type: application/json
   "password": "newpassword",
   "token": "ee5044da32d4e7cc4eadafc6cab2d98d0cdb5eabfdd10b6f0f9bdb47e76bf838"
 }
+
+
+### Search for a book by title to add to shelf GET /API/BOOKS/SEARCH
+
+GET http://localhost:5000/api/books/search?title="The art of war" HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
