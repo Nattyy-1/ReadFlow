@@ -147,6 +147,31 @@ class AuthService {
       message: message,
     });
   }
+
+  async verifyResetToken(email, token) {
+    const user = await prisma.user.findUnique({
+      where: { email }
+    });
+
+    if (!user || !user.resetToken || !user.resetTokenExpires) {
+      throw new Error('Invalid or expired reset link');
+    }
+
+    if (user.resetTokenExpires < new Date()) {
+      throw new Error('Reset link has expired');
+    }
+
+    const hashedIncomingToken = crypto
+      .createHash('sha256')
+      .update(token)
+      .digest('hex');
+
+    if (hashedIncomingToken !== user.resetToken) {
+      throw new Error('Invalid reset token');
+    }
+
+    return true;
+  }
 }
 
 export default new AuthService();
