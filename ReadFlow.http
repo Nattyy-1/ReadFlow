@@ -16,7 +16,7 @@ POST http://localhost:5000/api/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "password": "12345678",
+  "password": "newpassword",
   "username": "adfNate"
 }
 
@@ -44,5 +44,17 @@ Content-Type: application/json
 
 {
   "email": "testn@gmail.com",
-  "token": "e47b3fe0380a9a2b90cbbba5e2541f996408a87379aa5b2ba22c5d7425863f55"
+  "token": "ee5044da32d4e7cc4eadafc6cab2d98d0cdb5eabfdd10b6f0f9bdb47e76bf838"
+}
+
+
+### Reset a password PUT /API/AUTH/RESET-PASSWORD
+
+PUT http://localhost:5000/api/auth/reset-password HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "testn@gmail.com",
+  "password": "newpassword",
+  "token": "ee5044da32d4e7cc4eadafc6cab2d98d0cdb5eabfdd10b6f0f9bdb47e76bf838"
 }

@@ -75,8 +75,8 @@ class AuthService {
             { expiresIn: '7d' }
           );
 
-          const { password: _, ...userWithoutPassword } = user;
-          return { user: userWithoutPassword, token };
+          const { password: _, resetToken: __, resetTokenExpires: ___, ...userWithoutSensitiveData } = user;
+          return { user: userWithoutSensitiveData, token };
         }
       }
 
@@ -171,6 +171,26 @@ class AuthService {
     }
 
     return true;
+  }
+
+  async resetPassword(email, token, password) {
+    try {
+      await this.verifyResetToken(email, token);
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      await prisma.user.update({
+        where: { email },
+        data: {
+          password: hashedPassword,
+          resetToken: null,
+          resetTokenExpires: null
+        }
+      });
+
+    } catch (err) {
+      throw err;
+    }
   }
 }
 

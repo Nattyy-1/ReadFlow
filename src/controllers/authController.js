@@ -111,6 +111,29 @@ class authController {
       });
     }
   }
+
+  async resetPassword(req, res) {
+    try {
+      const { email, token, password } = req.body;
+
+      if (!email || !token || !password) {
+        return res.status(400).json({ message: "Email, token, and password are required" });
+      }
+
+      if (password.length < 8) {
+        return res.status(400).json({ message: "Password must be at least 8 characters" });
+      }
+
+      await authService.resetPassword(email, token, password);
+
+      return res.status(200).json({
+        message: "Password reset successful. You can now log in with your new password."
+      });
+
+    } catch (error) {
+      return res.status(400).json({ message: error.message || "Failed to reset password" });
+    }
+  }
 }
 
 export default new authController();
