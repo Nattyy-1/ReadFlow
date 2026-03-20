@@ -7,5 +7,6 @@ router.get('/search', bookController.searchBook);
 router.post('/add', bookController.addBook);
 router.get('/', bookController.getBooks);
 router.get('/:id', bookController.getBookById);
+router.patch('/:id', bookController.updateBookStatus);
 
 export default router;

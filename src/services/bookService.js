@@ -120,6 +120,20 @@ class bookService {
       }
     });
   }
+
+  async updateBookStatus(userId, bookId, status) {
+    return await prisma.userBook.update({
+      where: {
+        userId_bookId: {
+          userId,
+          bookId
+        }
+      },
+      data: {
+        status
+      }
+    });
+  }
 }
 
 export default new bookService();

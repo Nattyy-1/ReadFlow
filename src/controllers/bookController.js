@@ -87,6 +87,35 @@ class bookController {
       return res.status(500).json({ message: "Failed to retrieve book details" });
     }
   }
+
+  async updateBookStatus(req, res) {
+    const { id } = req.params;
+    const userId = req.user.id;
+    const { status } = req.body;
+
+    const validStatus = ['WANT_TO_READ', 'READING', 'COMPLETED'];
+    if (!status || !validStatus.includes(status)) {
+      return res.status(400).json({ message: "Status is empty or invalid" });
+    }
+
+    try {
+      const bookId = parseInt(id);
+      const updatedUserBook = await bookService.updateBookStatus(userId, bookId, status);
+
+      return res.status(200).json({
+        message: "Status updated successfully",
+        metadata: updatedUserBook
+      });
+
+    } catch (error) {
+      if (error.code === 'P2025') {
+        return res.status(404).json({ message: "No book entry found to update on your shelf" });
+      }
+
+      console.error("Update Status Error:", error);
+      return res.status(500).json({ message: "Failed to Update Status" });
+    }
+  }
 }
 
 export default new bookController();
