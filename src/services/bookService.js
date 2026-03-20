@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { prisma } from '../prismaClient.js';
 
 class bookService {
   async searchBook(title) {
@@ -27,6 +28,66 @@ class bookService {
     } catch (err) {
       throw err;
     }
+  }
+
+  async addBook(googleId, status, userId) {
+    let book = await prisma.book.findUnique({
+      where: { googleId }
+    });
+
+    if (!book) {
+      const params = new URLSearchParams({
+        fields: "id,volumeInfo(title,authors,description,pageCount,categories,imageLinks/thumbnail)",
+        key: process.env.GOOGLE_BOOKS_API_KEY
+      });
+
+      const url = `https://www.googleapis.com/books/v1/volumes/${googleId}?${params}`;
+      const response = await axios.get(url);
+      const info = response.data.volumeInfo;
+
+      book = await prisma.book.create({
+        data: {
+          googleId: response.data.id,
+          title: info.title,
+          author: info.authors?.[0] || "Unknown Author",
+          thumbnail: info.imageLinks?.thumbnail || "",
+          description: info.description || "",
+          pageCount: info.pageCount || 0,
+          category: info.categories?.[0] || "General"
+        }
+      });
+    }
+
+    const existingUserBook = await prisma.userBook.findUnique({
+      where: {
+        userId_bookId: { userId, bookId: book.id }
+      }
+    });
+
+    const needsStartDate = status === 'READING' && (!existingUserBook || !existingUserBook.startDate);
+
+    return await prisma.userBook.upsert({
+      where: {
+        userId_bookId: {
+          userId: userId,
+          bookId: book.id
+        }
+      },
+      update: {
+        status,
+        startDate: needsStartDate ? new Date() : undefined
+      },
+      create: {
+        userId: userId,
+        bookId: book.id,
+        status: status,
+        currentPage: 0,
+        startDate: status === 'READING' ? new Date() : null,
+      },
+      include: {
+        book: true
+      }
+    });
   }
 }
 

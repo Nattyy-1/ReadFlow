@@ -4,5 +4,6 @@ import bookController from '../controllers/bookController.js';
 const router = express.Router();
 
 router.get('/search', bookController.searchBook);
+router.post('/add', bookController.addBook);
 
 export default router;

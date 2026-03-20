@@ -20,6 +20,27 @@ class bookController {
       return res.status(500).json({ message: "Failed to fetch books from Google" });
     }
   }
+
+  async addBook(req, res) {
+    try {
+      const { googleId, status } = req.body;
+      const userId = req.user.id;
+
+      if (!googleId || !status) return res.status(400).json({ message: "GoogleId and Book status must be provided" });
+
+      const validStatus = ['WANT_TO_READ', 'READING', 'COMPLETED'];
+      if (!validStatus.includes(status)) return res.status(400).json({ message: "Invalid Reading Status provided" });
+
+      const result = await bookService.addBook(googleId, status, userId);
+      return res.status(201).json({
+        message: "Success",
+        book: result
+      });
+    } catch (error) {
+      console.error("Book Add Error:", error);
+      return res.status(500).json({ message: "Failed to add book from Google" });
+    }
+  }
 }
 
 export default new bookController();

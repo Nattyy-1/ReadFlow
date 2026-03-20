@@ -64,3 +64,15 @@ Content-Type: application/json
 
 GET http://localhost:5000/api/books/search?title="The art of war" HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
+
+
+### Add a book to shelf POST /API/BOOKS/ADD
+
+POST http://localhost:5000/api/books/add HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
+
+{
+  "googleId": "SbR2SVC8bTIC",
+  "status": "READING"
+}
