@@ -41,6 +41,28 @@ class bookController {
       return res.status(500).json({ message: "Failed to add book from Google" });
     }
   }
+
+  async getBooks(req, res) {
+    const { status } = req.query;
+    const { id } = req.user;
+
+    const validStatus = ['WANT_TO_READ', 'READING', 'COMPLETED'];
+
+    if (status && !validStatus.includes(status)) {
+      return res.status(400).json({ message: "Status must be valid or empty" });
+    }
+
+    try {
+      const books = await bookService.getBooks(id, status);
+      return res.status(200).json({
+        message: "Success",
+        book: books
+      })
+    } catch (error) {
+      console.error("Book Retrieve Error:", error);
+      return res.status(500).json({ message: "Failed to retrieve books" });
+    }
+  }
 }
 
 export default new bookController();

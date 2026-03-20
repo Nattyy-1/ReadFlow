@@ -89,6 +89,26 @@ class bookService {
       }
     });
   }
+
+  async getBooks(userId, status) {
+    const filter = { userId };
+
+    if (status) {
+      filter.status = status;
+    }
+
+    const userBooks = await prisma.userBook.findMany({
+      where: filter,
+      select: {
+        book: true
+      },
+      orderBy: {
+        startDate: 'desc'
+      }
+    });
+
+    return userBooks.map(entry => entry.book);
+  }
 }
 
 export default new bookService();
