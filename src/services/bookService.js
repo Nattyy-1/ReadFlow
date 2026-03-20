@@ -109,6 +109,17 @@ class bookService {
 
     return userBooks.map(entry => entry.book);
   }
+
+  async getBookById(bookId, userId) {
+    return await prisma.userBook.findUnique({
+      where: {
+        userId_bookId: {
+          userId,
+          bookId
+        }
+      }
+    });
+  }
 }
 
 export default new bookService();

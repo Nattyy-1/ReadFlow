@@ -63,6 +63,30 @@ class bookController {
       return res.status(500).json({ message: "Failed to retrieve books" });
     }
   }
+
+  async getBookById(req, res) {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    try {
+      const bookId = parseInt(id);
+
+      const bookMetadata = await bookService.getBookById(bookId, userId);
+
+      if (!bookMetadata) {
+        return res.status(404).json({ message: "No book found by that id on your shelf" });
+      }
+
+      return res.status(200).json({
+        message: "Success",
+        metadata: bookMetadata
+      });
+
+    } catch (error) {
+      console.error("Fetch Detail Error:", error);
+      return res.status(500).json({ message: "Failed to retrieve book details" });
+    }
+  }
 }
 
 export default new bookController();
