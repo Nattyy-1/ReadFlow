@@ -90,7 +90,7 @@ GET http://localhost:5000/api/books/1 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
 
 
-### Update the status status of a book PATCH /API/BOOKS/:id
+### Update the status of a book PATCH /API/BOOKS/:id
 
 PATCH http://localhost:5000/api/books/1 HTTP/1.1
 Content-Type: application/json
@@ -99,3 +99,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hb
 {
   "status": "READING"
 }
+
+
+### Delete a book entry for a user DELETE /API/BOOKS/:id
+
+DELETE http://localhost:5000/api/books/1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE

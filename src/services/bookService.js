@@ -134,6 +134,17 @@ class bookService {
       }
     });
   }
+
+  async deleteBook(userId, bookId) {
+    return await prisma.userBook.delete({
+      where: {
+        userId_bookId: {
+          userId,
+          bookId
+        }
+      }
+    });
+  }
 }
 
 export default new bookService();

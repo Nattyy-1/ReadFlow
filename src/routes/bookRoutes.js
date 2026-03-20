@@ -8,5 +8,6 @@ router.post('/add', bookController.addBook);
 router.get('/', bookController.getBooks);
 router.get('/:id', bookController.getBookById);
 router.patch('/:id', bookController.updateBookStatus);
+router.delete('/:id', bookController.deleteBook);
 
 export default router;

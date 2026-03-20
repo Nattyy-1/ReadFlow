@@ -116,6 +116,25 @@ class bookController {
       return res.status(500).json({ message: "Failed to Update Status" });
     }
   }
+
+  async deleteBook(req, res) {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    try {
+      const bookId = parseInt(id);
+      await bookService.deleteBook(userId, bookId);
+
+      return res.sendStatus(204);
+    } catch (error) {
+      if (error.code === 'P2025') {
+        return res.status(404).json({ message: "No book entry found to delete" });
+      }
+
+      console.error("Delete Book Error:", error);
+      return res.status(500).json({ message: "Failed to delete User book entry" });
+    }
+  }
 }
 
 export default new bookController();
