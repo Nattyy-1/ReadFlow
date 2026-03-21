@@ -74,7 +74,7 @@ model ReadingSession {
 
   // Relationship
   userBookId Int
-  userBook   UserBook @relation(fields: [userBookId], references: [id])
+  userBook   UserBook @relation(fields: [userBookId], references: [id], onDelete: Cascade)
 }
 
 // Enums for status

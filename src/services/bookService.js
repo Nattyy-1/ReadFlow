@@ -145,6 +145,17 @@ class bookService {
       }
     });
   }
+  async resetBookProgress(userId, bookId) {
+    return await prisma.userBook.update({
+      where: {
+        userId_bookId: { userId, bookId }
+      },
+      data: {
+        currentPage: 0,
+        endDate: null
+      }
+    });
+  }
 }
 
 export default new bookService();
