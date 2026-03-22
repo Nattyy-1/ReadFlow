@@ -168,6 +168,18 @@ class bookService {
       }
     });
   }
+
+  async updateReview(userId, bookId, rating, review = null) {
+    return await prisma.userBook.update({
+      where: {
+        userId_bookId: { userId, bookId }
+      },
+      data: {
+        rating,
+        review
+      }
+    });
+  }
 }
 
 export default new bookService();

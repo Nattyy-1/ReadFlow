@@ -135,6 +135,35 @@ class bookController {
       return res.status(500).json({ message: "Failed to delete User book entry" });
     }
   }
+
+  async updateReview(req, res) {
+    const userId = req.user.id;
+    const bookId = parseInt(req.params.id);
+    const rating = parseInt(req.body.rating);
+    const review = req.body.review || null;
+
+    const lowest_possible_book_rating = 1;
+    const highest_possible_book_rating = 5;
+
+    if (isNaN(rating) || rating < lowest_possible_book_rating || rating > highest_possible_book_rating) {
+      return res.status(400).json({ message: "Rating must be a number from 1 to 5" }); // 2. Fixed 'res' typo
+    }
+
+    try {
+      const updatedUserBook = await bookService.updateReview(userId, bookId, rating, review);
+      return res.status(200).json({
+        message: "Review updated successfully",
+        data: updatedUserBook
+      });
+
+    } catch (error) {
+      if (error.code === 'P2025') {
+        return res.status(404).json({ message: "Book not found on your shelf." });
+      }
+      console.error("Review log error: ", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
 }
 
 export default new bookController();
