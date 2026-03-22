@@ -62,7 +62,7 @@ Content-Type: application/json
 
 ### Search for a book by title to add to shelf GET /API/BOOKS/SEARCH
 
-GET http://localhost:5000/api/books/search?title="The art of war" HTTP/1.1
+GET http://localhost:5000/api/books/search?title="The trial" HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
 
 
@@ -73,7 +73,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
 
 {
-  "googleId": "SbR2SVC8bTIC",
+  "googleId": "i0FqEAAAQBAJ",
   "status": "READING"
 }
 
@@ -128,3 +128,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hb
   "currentPage": "5",
   "sessionId": "4"
 }
+
+
+### Get all the sessions of a book GET /API/SESSIONS/BOOK/:id
+
+GET localhost:5000/api/sessions/book/1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
+
+
+### Get all the sessions of a user GET /API/SESSIONS/
+
+GET localhost:5000/api/sessions HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE

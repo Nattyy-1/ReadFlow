@@ -89,6 +89,33 @@ class sessionService {
 
     return updatedSession;
   }
+
+  async getSessions(userId, bookId = null) {
+    return await prisma.readingSession.findMany({
+      where: {
+        userBook: {
+          userId: userId,
+          ...(bookId && { bookId: bookId })
+        }
+      },
+      orderBy: { startTime: 'desc' },
+      select: {
+        id: true,
+        startTime: true,
+        pagesRead: true,
+        duration: true,
+        userBook: {
+          select: {
+            book: {
+              select: {
+                title: true
+              }
+            }
+          }
+        }
+      }
+    });
+  }
 }
 
 export default new sessionService();

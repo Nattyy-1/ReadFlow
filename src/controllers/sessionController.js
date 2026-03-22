@@ -84,6 +84,33 @@ class sessionController {
       return res.status(500).json({ message: "Internal Server Error" });
     }
   }
+
+  async getSessionsForBook(req, res) {
+    const userId = req.user.id;
+    const bookId = parseInt(req.params.bookId);
+
+    if (isNaN(bookId)) {
+      return res.status(400).json({ message: "A numeric bookId must be provided" });
+    }
+
+    try {
+      const sessions = await sessionService.getSessions(userId, bookId);
+      return res.json({ data: sessions });
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  async getAllSessions(req, res) {
+    const userId = req.user.id;
+
+    try {
+      const sessions = await sessionService.getSessions(userId);
+      return res.json({ data: sessions });
+    } catch (error) {
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
 }
 
 export default new sessionController();
