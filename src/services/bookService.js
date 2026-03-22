@@ -130,7 +130,8 @@ class bookService {
         }
       },
       data: {
-        status
+        status,
+        endDate: status === 'COMPLETED' ? new Date() : undefined,
       }
     });
   }
@@ -153,6 +154,17 @@ class bookService {
       data: {
         currentPage: 0,
         endDate: null
+      }
+    });
+  }
+
+  async updatePage(userId, bookId, currentPage) {
+    return await prisma.userBook.update({
+      where: {
+        userId_bookId: { userId, bookId }
+      },
+      data: {
+        currentPage
       }
     });
   }
