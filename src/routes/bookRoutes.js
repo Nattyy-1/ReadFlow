@@ -10,5 +10,6 @@ router.get('/:id', bookController.getBookById);
 router.patch('/:id', bookController.updateBookStatus);
 router.delete('/:id', bookController.deleteBook);
 router.patch('/:id/review', bookController.updateReview);
+router.get('/:id/pace', bookController.getPace);
 
 export default router;

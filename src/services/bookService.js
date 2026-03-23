@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { prisma } from '../prismaClient.js';
+import sessionService from './sessionService.js';
 
 class bookService {
   async searchBook(title) {
@@ -179,6 +180,23 @@ class bookService {
         review
       }
     });
+  }
+
+  async getPace(userId, bookId) {
+    const sessions = await sessionService.getSessions(userId, bookId);
+
+    if (!sessions || sessions.length === 0) {
+      throw new Error("No sessions found for this book");
+    }
+
+    const totalPages = sessions.reduce((sum, s) => sum + (s.pagesRead || 0), 0);
+    const totalSeconds = sessions.reduce((sum, s) => sum + (s.duration || 0), 0);
+
+    if (totalSeconds === 0) return 0;
+
+    const pagesPerHour = (totalPages / totalSeconds) * 3600;
+
+    return Math.round(pagesPerHour * 10) / 10;
   }
 }
 

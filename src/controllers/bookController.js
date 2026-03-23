@@ -164,6 +164,31 @@ class bookController {
       return res.status(500).json({ message: "Internal server error" });
     }
   }
+
+  async getPace(req, res) {
+    const userId = req.user.id;
+    const bookId = parseInt(req.params.id);
+
+    if (isNaN(bookId)) {
+      return res.status(400).json({ message: "bookId must be a number" });
+    }
+
+    try {
+      const pace = await bookService.getPace(userId, bookId);
+      res.status(200).json({
+        message: "Success",
+        pace: pace,
+        unit: "pages_per_hour"
+      });
+    } catch (error) {
+      if (error.message.includes("No sessions found")) {
+        return res.status(404).json({ message: error.message });
+      }
+
+      console.error("Pace Calculation Error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
 }
 
 export default new bookController();

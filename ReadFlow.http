@@ -119,6 +119,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hb
 }
 
 
+### Get the reading pace of the user for a specific book GET /API/BOOKS/:id/PACE
+
+GET localhost:5000/api/books/1/pace HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
+
+
 ### Start a reading session for a book POST /API/SESSIONS/START
 
 POST localhost:5000/api/sessions/start HTTP/1.1
