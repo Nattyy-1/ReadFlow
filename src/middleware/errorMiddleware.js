@@ -1,40 +1,44 @@
 const errorHandler = (err, req, res, next) => {
-  let error = { ...err };
-  error.message = err.message;
+  let statusCode = err.statusCode || 500;
+  let message = err.message || 'Internal Server Error';
 
-  console.error(`Error: ${err.message}`.red);
+  console.error(`Error: ${message}`.red);
   if (process.env.NODE_ENV !== 'production') {
     console.error(err.stack);
   }
 
   if (err.code === 'P2002') {
-    error.message = `The ${err.meta.target} is already taken.`;
-    error.statusCode = 409;
+    let field = 'record';
+    if (err.meta?.target) {
+      field = Array.isArray(err.meta.target) ? err.meta.target[0] : err.meta.target;
+    } else if (err.message.includes('fields: (`')) {
+      field = err.message.split('(`')[1].split('`)')[0];
+    }
+    message = `The ${field.replace('_key', '').replace('_unique', '')} is already taken.`;
+    statusCode = 409;
   }
 
-  if (err.code === 'P2025') {
-    error.message = err.message || 'Resource not found in database.';
-    error.statusCode = 404;
+  if (err.code === 'P2025' || (err.message && err.message.includes('P2025'))) {
+    statusCode = 404;
+    message = (err.message.includes('invocation') || err.message === 'P2025')
+      ? 'The requested book or record was not found on your shelf.'
+      : err.message;
   }
 
   if (err.name === 'JsonWebTokenError') {
-    error.message = 'Invalid token. Please log in again.';
-    error.statusCode = 401;
+    message = 'Invalid token. Please log in again.';
+    statusCode = 401;
   }
-
   if (err.name === 'TokenExpiredError') {
-    error.message = 'Your session has expired. Please log in again.';
-    error.statusCode = 401;
+    message = 'Your session has expired. Please log in again.';
+    statusCode = 401;
   }
 
   if (err.message && err.message.startsWith('ACTIVE_SESSION_EXISTS')) {
-    const bookTitle = err.message.split(':')[1]; // Grabs "The Great Gatsby"
-    error.message = `You already have an active session for "${bookTitle}".`;
-    error.statusCode = 400; // Bad Request / Conflict
+    const bookTitle = err.message.split(':')[1] || 'this book';
+    message = `You already have an active session for "${bookTitle}".`;
+    statusCode = 400;
   }
-
-  const statusCode = error.statusCode || 500;
-  const message = error.message || 'Internal Server Error';
 
   res.status(statusCode).json({
     success: false,

@@ -4,9 +4,9 @@ POST http://localhost:5000/api/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "testn@gmail.com",
+  "email": "test2@gmail.com",
   "password": "12345678",
-  "username": "adfNate"
+  "username": "test2"
 }
 
 
@@ -17,14 +17,14 @@ Content-Type: application/json
 
 {
   "password": "newpassword",
-  "username": "adfNate"
+  "username": "test2"
 }
 
 
 ### Get a user profile GET /API/AUTH/ME
 
 GET http://localhost:5000/api/auth/me HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTM1NTAzLCJleHAiOjE3NzQ1NDAzMDN9.S6yCaft7SVG3XTB6iY9S3_C04V8p7mjl7sEbI0NyvTg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNTk4MSwiZXhwIjoxNzc1MDQwNzgxfQ._BeZY8apisZcVgY9CH6aIg2U1yKJeZtmKdqokWtZVUg
 
 
 ### Send a password reset token to the user POST /API/AUTH/FORGOT-PASSWORD
@@ -33,7 +33,7 @@ POST http://localhost:5000/api/auth/forgot-password HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "testn@gmail.com"
+  "email": "test2@gmail.com"
 }
 
 
@@ -43,8 +43,8 @@ GET http://localhost:5000/api/auth/verify-reset-token HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "testn@gmail.com",
-  "token": "ee5044da32d4e7cc4eadafc6cab2d98d0cdb5eabfdd10b6f0f9bdb47e76bf838"
+  "email": "test2@gmail.com",
+  "token": "c7e7d2139fafc93f2f8dea68a4e8298f517db51d2f5f11b95b33a97882f55364"
 }
 
 
@@ -54,23 +54,23 @@ PUT http://localhost:5000/api/auth/reset-password HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "testn@gmail.com",
+  "email": "test2@gmail.com",
   "password": "newpassword",
-  "token": "ee5044da32d4e7cc4eadafc6cab2d98d0cdb5eabfdd10b6f0f9bdb47e76bf838"
+  "token": "c7e7d2139fafc93f2f8dea68a4e8298f517db51d2f5f11b95b33a97882f55364"
 }
 
 
 ### Search for a book by title to add to shelf GET /API/BOOKS/SEARCH
 
 GET http://localhost:5000/api/books/search?title="The trial" HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNjQxNiwiZXhwIjoxNzc1MDQxMjE2fQ.njc8WmJMLCOsQhiaV9DKifG81KkhJn3Rn2Z8-j_USBw
 
 
 ### Add a book to shelf POST /API/BOOKS/ADD
 
 POST http://localhost:5000/api/books/add HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNjQxNiwiZXhwIjoxNzc1MDQxMjE2fQ.njc8WmJMLCOsQhiaV9DKifG81KkhJn3Rn2Z8-j_USBw
 
 {
   "googleId": "i0FqEAAAQBAJ",
@@ -80,24 +80,24 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hb
 
 ### Get the books a user has added to his shelf GET /API/BOOKS
 
-GET http://localhost:5000/api/books/?status=READING HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
+GET http://localhost:5000/api/books/?status= HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNjQxNiwiZXhwIjoxNzc1MDQxMjE2fQ.njc8WmJMLCOsQhiaV9DKifG81KkhJn3Rn2Z8-j_USBw
 
 
 ### Get details of a specific book like progress for a specific user GET /API/BOOKS/:id
 
-GET http://localhost:5000/api/books/1 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
+GET http://localhost:5000/api/books/2 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNjQxNiwiZXhwIjoxNzc1MDQxMjE2fQ.njc8WmJMLCOsQhiaV9DKifG81KkhJn3Rn2Z8-j_USBw
 
 
 ### Update the status of a book PATCH /API/BOOKS/:id
 
 PATCH http://localhost:5000/api/books/2 HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNjQxNiwiZXhwIjoxNzc1MDQxMjE2fQ.njc8WmJMLCOsQhiaV9DKifG81KkhJn3Rn2Z8-j_USBw
 
 {
-  "status": "WANT_TO_READ"
+  "status": "READING"
 }
 
 
@@ -109,30 +109,30 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hb
 
 ### Update the review and rating of a book PATCH /API/BOOKS/:id/REVIEW
 
-PATCH localhost:5000/api/books/1/review HTTP/1.1
+PATCH localhost:5000/api/books/2/review HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNjQxNiwiZXhwIjoxNzc1MDQxMjE2fQ.njc8WmJMLCOsQhiaV9DKifG81KkhJn3Rn2Z8-j_USBw
 
 {
-  "rating": "3",
-  "review": "Great Book"
+  "rating": "4",
+  "review": "great book"
 }
 
 
 ### Get the reading pace of the user for a specific book GET /API/BOOKS/:id/PACE
 
-GET localhost:5000/api/books/1/pace HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
+GET localhost:5000/api/books/2/pace HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNjQxNiwiZXhwIjoxNzc1MDQxMjE2fQ.njc8WmJMLCOsQhiaV9DKifG81KkhJn3Rn2Z8-j_USBw
 
 
 ### Start a reading session for a book POST /API/SESSIONS/START
 
 POST localhost:5000/api/sessions/start HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNjQxNiwiZXhwIjoxNzc1MDQxMjE2fQ.njc8WmJMLCOsQhiaV9DKifG81KkhJn3Rn2Z8-j_USBw
 
 {
-  "bookId": "1"
+  "bookId": "2"
 }
 
 
@@ -140,21 +140,21 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hb
 
 POST localhost:5000/api/sessions/stop HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNjQxNiwiZXhwIjoxNzc1MDQxMjE2fQ.njc8WmJMLCOsQhiaV9DKifG81KkhJn3Rn2Z8-j_USBw
 
 {
-  "currentPage": "170",
-  "sessionId": "7"
+  "currentPage": "280",
+  "sessionId": "10"
 }
 
 
 ### Get all the sessions of a book GET /API/SESSIONS/BOOK/:id
 
-GET localhost:5000/api/sessions/book/1 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
+GET localhost:5000/api/sessions/book/2 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNjQxNiwiZXhwIjoxNzc1MDQxMjE2fQ.njc8WmJMLCOsQhiaV9DKifG81KkhJn3Rn2Z8-j_USBw
 
 
 ### Get all the sessions of a user GET /API/SESSIONS/
 
 GET localhost:5000/api/sessions HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZGZuYXRlIiwiaWF0IjoxNzczOTQzNjg5LCJleHAiOjE3NzQ1NDg0ODl9.dprrCLLLXd3Ar1c4YO1kyZhp4L905nTgmzcoehd9aIE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNjQxNiwiZXhwIjoxNzc1MDQxMjE2fQ.njc8WmJMLCOsQhiaV9DKifG81KkhJn3Rn2Z8-j_USBw

@@ -14,3 +14,5 @@
 
 [ ] Database: Session Tracking – Add a Session model to schema.prisma to track and revoke specific device logins.
 [ ] Refactor: Config Layer – Move all process.env calls into a single config.js with "fail-fast" validation.
+
+if a user starts rereading a book the pace should be calculated from the moment a book has been marked from completed to reading so the sessions that were logged starting from that time should be used to calculate the user pace
