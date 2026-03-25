@@ -1,7 +1,7 @@
 import express from 'express';
 import helmet from 'helmet';
 import authRoutes from './routes/authRoutes.js';
-import authMiddleware from './middleware/authMiddleware.js';
+import { authMiddleware } from './middleware/authMiddleware.js';
 import errorHandler from './middleware/errorMiddleware.js';
 import bookRoutes from './routes/bookRoutes.js';
 import sessionRoutes from './routes/sessionRoutes.js';

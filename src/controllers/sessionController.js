@@ -2,14 +2,8 @@ import sessionService from "../services/sessionService.js";
 
 class sessionController {
   async startSession(req, res) {
-    const bookId = parseInt(req.body.bookId);
+    const { bookId } = req.body;
     const userId = req.user.id;
-
-    if (!bookId || isNaN(bookId)) {
-      const error = new Error("A valid numeric bookId is required to start a session");
-      error.statusCode = 400;
-      throw error;
-    }
 
     const session = await sessionService.startSession(userId, bookId);
 
@@ -20,14 +14,7 @@ class sessionController {
   }
 
   async stopSession(req, res) {
-    const sessionId = parseInt(req.body.sessionId, 10);
-    const currentPage = parseInt(req.body.currentPage, 10);
-
-    if (isNaN(sessionId) || isNaN(currentPage)) {
-      const error = new Error("Valid numeric sessionId and currentPage are required.");
-      error.statusCode = 400;
-      throw error;
-    }
+    const { sessionId, currentPage } = req.body;
 
     const session = await sessionService.endSession(sessionId, currentPage);
 
@@ -45,13 +32,7 @@ class sessionController {
 
   async getSessionsForBook(req, res) {
     const userId = req.user.id;
-    const bookId = parseInt(req.params.bookId);
-
-    if (isNaN(bookId)) {
-      const error = new Error("A numeric bookId must be provided");
-      error.statusCode = 400;
-      throw error;
-    }
+    const { bookId } = req.validData.params;
 
     const sessions = await sessionService.getSessions(userId, bookId);
 

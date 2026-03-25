@@ -25,6 +25,22 @@ const errorHandler = (err, req, res, next) => {
       : err.message;
   }
 
+
+  if (err.name === 'ZodError') {
+    statusCode = 400;
+
+    const formatted = {};
+
+    err.issues.forEach(e => {
+      const key = e.path.slice(1).join('.');
+      if (!formatted[key]) {
+        formatted[key] = e.message;
+      }
+    });
+
+    message = formatted;
+  }
+
   if (err.name === 'JsonWebTokenError') {
     message = 'Invalid token. Please log in again.';
     statusCode = 401;
