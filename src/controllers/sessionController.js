@@ -5,46 +5,18 @@ class sessionController {
     const bookId = parseInt(req.body.bookId);
     const userId = req.user.id;
 
-    if (!bookId) {
-      return res.status(400).json({
-        message: "bookId is required to start a session"
-      });
+    if (!bookId || isNaN(bookId)) {
+      const error = new Error("A valid numeric bookId is required to start a session");
+      error.statusCode = 400;
+      throw error;
     }
 
-    if (isNaN(bookId)) {
-      return res.status(400).json({
-        message: "A valid numeric bookId is required"
-      });
-    }
+    const session = await sessionService.startSession(userId, bookId);
 
-    try {
-      const session = await sessionService.startSession(userId, bookId);
-
-      return res.status(201).json({
-        message: "Success",
-        session
-      });
-
-    } catch (error) {
-
-      if (error.message.startsWith("ACTIVE_SESSION_EXISTS")) {
-        const bookTitle = error.message.split(":")[1];
-        return res.status(400).json({
-          message: `You already have an active session for "${bookTitle}".`
-        });
-      }
-
-      if (error.message === "P2025") {
-        return res.status(404).json({
-          message: "This book was not found on your shelf."
-        });
-      }
-
-      console.error("Session Start Error: ", error);
-      return res.status(500).json({
-        message: "An internal error occurred while starting the session"
-      });
-    }
+    res.status(201).json({
+      success: true,
+      session
+    });
   }
 
   async stopSession(req, res) {
@@ -52,37 +24,23 @@ class sessionController {
     const currentPage = parseInt(req.body.currentPage, 10);
 
     if (isNaN(sessionId) || isNaN(currentPage)) {
-      return res.status(400).json({
-        message: "Valid numeric sessionId and currentPage are required."
-      });
+      const error = new Error("Valid numeric sessionId and currentPage are required.");
+      error.statusCode = 400;
+      throw error;
     }
 
-    try {
-      const session = await sessionService.endSession(sessionId, currentPage);
+    const session = await sessionService.endSession(sessionId, currentPage);
 
-      return res.status(200).json({
-        message: "Reading session recorded successfully.",
-        data: {
-          duration: session.duration,
-          pagesRead: session.pagesRead,
-          endTime: session.endTime,
-          status: session.bookStatus || 'READING'
-        }
-      });
-    } catch (error) {
-      const clientErrors = [
-        "No open session",
-        "less than",
-        "cannot exceed"
-      ];
-
-      if (clientErrors.some(msg => error.message.includes(msg))) {
-        return res.status(400).json({ message: error.message });
+    res.status(200).json({
+      success: true,
+      message: "Reading session recorded successfully.",
+      data: {
+        duration: session.duration,
+        pagesRead: session.pagesRead,
+        endTime: session.endTime,
+        status: session.bookStatus || 'READING'
       }
-
-      console.error("Stop Session Error:", error);
-      return res.status(500).json({ message: "Internal Server Error" });
-    }
+    });
   }
 
   async getSessionsForBook(req, res) {
@@ -90,26 +48,28 @@ class sessionController {
     const bookId = parseInt(req.params.bookId);
 
     if (isNaN(bookId)) {
-      return res.status(400).json({ message: "A numeric bookId must be provided" });
+      const error = new Error("A numeric bookId must be provided");
+      error.statusCode = 400;
+      throw error;
     }
 
-    try {
-      const sessions = await sessionService.getSessions(userId, bookId);
-      return res.json({ data: sessions });
-    } catch (error) {
-      return res.status(500).json({ message: "Internal Server Error" });
-    }
+    const sessions = await sessionService.getSessions(userId, bookId);
+
+    res.status(200).json({
+      success: true,
+      data: sessions
+    });
   }
 
   async getAllSessions(req, res) {
     const userId = req.user.id;
 
-    try {
-      const sessions = await sessionService.getSessions(userId);
-      return res.json({ data: sessions });
-    } catch (error) {
-      return res.status(500).json({ message: "Internal Server Error" });
-    }
+    const sessions = await sessionService.getSessions(userId);
+
+    res.status(200).json({
+      success: true,
+      data: sessions
+    });
   }
 }
 

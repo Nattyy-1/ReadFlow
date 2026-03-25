@@ -32,7 +32,7 @@ class sessionService {
       await bookService.updateBookStatus(userId, bookId, 'READING');
     }
 
-    return await prisma.readingSession.create({
+    return prisma.readingSession.create({
       data: {
         startTime: new Date(),
         userBookId: userBook.id
@@ -51,7 +51,9 @@ class sessionService {
     });
 
     if (!activeSession || activeSession.endTime !== null) {
-      throw new Error("No open session found by this ID");
+      const error = new Error("No open session found by this ID");
+      error.statusCode = 404;
+      throw error;
     }
 
     const previousPage = activeSession.userBook.currentPage;
@@ -60,11 +62,15 @@ class sessionService {
     const bookId = activeSession.userBook.bookId;
 
     if (currentPage < previousPage) {
-      throw new Error("Current page cannot be less than the previous recorded page");
+      const error = new Error("Current page cannot be less than the previous recorded page");
+      error.statusCode = 400;
+      throw error;
     }
 
     if (currentPage > totalPageCount) {
-      throw new Error("Current page cannot exceed the book's total page count");
+      const error = new Error("Current page cannot exceed the book's total page count");
+      error.statusCode = 400;
+      throw error;
     }
 
     const endTime = new Date();
