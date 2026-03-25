@@ -11,97 +11,84 @@ class AuthService {
   }
 
   async #hashPassword(password) {
-    try {
-      if (!password) {
-        throw new Error("Password argument is missing/undefined");
-      }
-      const rounds = this?.saltRounds || 10;
-      return await bcrypt.hash(password, rounds);
-    } catch (err) {
-      throw new Error('Password hashing failed');
-    }
+    if (!password) throw new Error("Password is required");
+    return await bcrypt.hash(password, this.saltRounds);
   }
 
   async #verifyPassword(password, hash) {
-    try {
-      return await bcrypt.compare(password, hash);
-    } catch (err) {
-      throw new Error('Password Verification failed');
-    }
+    return await bcrypt.compare(password, hash);
   }
 
   async register(username, email, password) {
-    try {
-      const hashedPassword = await this.#hashPassword(password);
+    const hashedPassword = await this.#hashPassword(password);
 
-      const user = await prisma.user.create({
-        data: {
-          username: username.toLowerCase(),
-          email: email.toLowerCase(),
-          password: hashedPassword
-        }
-      });
+    const user = await prisma.user.create({
+      data: {
+        username: username.toLowerCase(),
+        email: email.toLowerCase(),
+        password: hashedPassword
+      }
+    });
 
-      const token = jwt.sign(
-        { id: user.id, username: user.username },
-        this.jwtSecret,
-        { expiresIn: '7d' }
-      );
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      this.jwtSecret,
+      { expiresIn: '7d' }
+    );
 
-      const { password: _, ...userWithoutPassword } = user;
-      return {
-        user: userWithoutPassword,
-        token
-      };
-
-    } catch (err) {
-      throw err;
-    }
+    const { password: _, ...userWithoutPassword } = user;
+    return {
+      user: userWithoutPassword,
+      token
+    };
   }
 
   async login(username, password) {
-    try {
-      const user = await prisma.user.findFirst({
-        where: { username: username.toLowerCase() }
-      });
+    const user = await prisma.user.findFirst({
+      where: { username: username.toLowerCase() }
+    });
 
-      if (user) {
-        const isPasswordValid = await this.#verifyPassword(password, user.password);
-
-        if (isPasswordValid) {
-          const token = jwt.sign(
-            { id: user.id, username: user.username },
-            this.jwtSecret,
-            { expiresIn: '7d' }
-          );
-
-          const { password: _, resetToken: __, resetTokenExpires: ___, ...userWithoutSensitiveData } = user;
-          return { user: userWithoutSensitiveData, token };
-        }
-      }
-
+    if (!user || !(await this.#verifyPassword(password, user.password))) {
       const error = new Error("Invalid username or password");
-      error.status = 401;
+      error.statusCode = 401;
       throw error;
-
-    } catch (err) {
-      throw err;
     }
+
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      this.jwtSecret,
+      { expiresIn: '7d' }
+    );
+
+    const {
+      password: _,
+      resetToken: __,
+      resetTokenExpires: ___,
+      ...userWithoutSensitiveData
+    } = user;
+
+    return { user: userWithoutSensitiveData, token };
   }
 
   async getMe(userId) {
-    try {
-      const user = await prisma.user.findUnique({
-        where: { id: parseInt(userId) }
-      });
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(userId) }
+    });
 
-      if (!user) throw new Error("User not found");
-
-      const { password: _, resetToken: __, resetTokenExpires: ___, ...userWithoutSensitiveData } = user;
-      return { user: userWithoutSensitiveData };
-    } catch (err) {
-      throw err;
+    if (!user) {
+      const error = new Error("User not found");
+      error.statusCode = 404;
+      throw error;
     }
+
+    const {
+      password: _,
+      resetToken: __,
+      resetTokenExpires: ___,
+      ...userWithoutSensitiveData
+    } = user;
+
+    return { user: userWithoutSensitiveData };
   }
 
   async processPasswordReset(email) {
@@ -152,11 +139,15 @@ class AuthService {
     });
 
     if (!user || !user.resetToken || !user.resetTokenExpires) {
-      throw new Error('Invalid or expired reset link');
+      const error = new Error('Invalid or expired reset link');
+      error.statusCode = 400;
+      throw error;
     }
 
     if (user.resetTokenExpires < new Date()) {
-      throw new Error('Reset link has expired');
+      const error = new Error('Reset link has expired');
+      error.statusCode = 400;
+      throw error;
     }
 
     const hashedIncomingToken = crypto
@@ -164,31 +155,33 @@ class AuthService {
       .update(token)
       .digest('hex');
 
-    if (hashedIncomingToken !== user.resetToken) {
-      throw new Error('Invalid reset token');
+    const isMatch = crypto.timingSafeEqual(
+      Buffer.from(user.resetToken),
+      Buffer.from(hashedIncomingToken)
+    );
+
+    if (!isMatch) {
+      const error = new Error('Invalid reset token');
+      error.statusCode = 400;
+      throw error;
     }
 
     return true;
   }
 
   async resetPassword(email, token, password) {
-    try {
-      await this.verifyResetToken(email, token);
+    await this.verifyResetToken(email, token);
 
-      const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, this.saltRounds);
 
-      await prisma.user.update({
-        where: { email },
-        data: {
-          password: hashedPassword,
-          resetToken: null,
-          resetTokenExpires: null
-        }
-      });
-
-    } catch (err) {
-      throw err;
-    }
+    await prisma.user.update({
+      where: { email: email.toLowerCase() },
+      data: {
+        password: hashedPassword,
+        resetToken: null,
+        resetTokenExpires: null
+      }
+    });
   }
 }
 
