@@ -4,7 +4,6 @@ import sessionService from './sessionService.js';
 
 class bookService {
   async searchBook(title) {
-
     const params = new URLSearchParams({
       q: `intitle:${title}`,
       maxResults: 10,
@@ -14,21 +13,18 @@ class bookService {
 
     const url = `https://www.googleapis.com/books/v1/volumes?${params}`;
 
-    try {
-      const response = await axios.get(url);
+    const response = await axios.get(url);
 
-      if (!response.data.items) return [];
-      const bookList = response.data.items.map(item => ({
-        googleId: item.id,
-        title: item.volumeInfo.title,
-        author: item.volumeInfo.authors?.[0] || 'Unknown Author',
-        thumbnail: item.volumeInfo.imageLinks?.thumbnail || ''
-      }));
+    if (!response.data.items) return [];
 
-      return bookList;
-    } catch (err) {
-      throw err;
-    }
+    const bookList = response.data.items.map(item => ({
+      googleId: item.id,
+      title: item.volumeInfo.title,
+      author: item.volumeInfo.authors?.[0] || 'Unknown Author',
+      thumbnail: item.volumeInfo.imageLinks?.thumbnail || ''
+    }));
+
+    return bookList;
   }
 
   async addBook(googleId, status, userId) {
@@ -60,28 +56,23 @@ class bookService {
     }
 
     const existingUserBook = await prisma.userBook.findUnique({
-      where: {
-        userId_bookId: { userId, bookId: book.id }
-      }
+      where: { userId_bookId: { userId, bookId: book.id } }
     });
 
     const needsStartDate = status === 'READING' && (!existingUserBook || !existingUserBook.startDate);
 
     return await prisma.userBook.upsert({
       where: {
-        userId_bookId: {
-          userId: userId,
-          bookId: book.id
-        }
+        userId_bookId: { userId, bookId: book.id }
       },
       update: {
         status,
         startDate: needsStartDate ? new Date() : undefined
       },
       create: {
-        userId: userId,
+        userId,
         bookId: book.id,
-        status: status,
+        status,
         currentPage: 0,
         startDate: status === 'READING' ? new Date() : null,
       },
@@ -147,6 +138,7 @@ class bookService {
       }
     });
   }
+
   async resetBookProgress(userId, bookId) {
     return await prisma.userBook.update({
       where: {
@@ -186,7 +178,9 @@ class bookService {
     const sessions = await sessionService.getSessions(userId, bookId);
 
     if (!sessions || sessions.length === 0) {
-      throw new Error("No sessions found for this book");
+      const error = new Error("No sessions found for this book");
+      error.statusCode = 404;
+      throw error;
     }
 
     const totalPages = sessions.reduce((sum, s) => sum + (s.pagesRead || 0), 0);
