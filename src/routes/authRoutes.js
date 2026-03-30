@@ -14,5 +14,6 @@ router.get('/me', authMiddleware, asyncHandler(authController.getMe));
 router.post('/forgot-password', strictLimiter, validate(authSchemas.forgotPasswordSchema), asyncHandler(authController.sendResetToken));
 router.post('/verify-reset-token', validate(authSchemas.verifyResetTokenSchema), asyncHandler(authController.verifyResetToken));
 router.put('/reset-password', strictLimiter, validate(authSchemas.resetPasswordSchema), asyncHandler(authController.resetPassword));
+router.post('/google', strictLimiter, validate(authSchemas.googleLoginSchema), asyncHandler(authController.googleLogin));
 
 export default router;

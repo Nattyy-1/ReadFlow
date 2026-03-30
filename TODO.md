@@ -16,3 +16,8 @@
 [ ] Refactor: Config Layer – Move all process.env calls into a single config.js with "fail-fast" validation.
 
 if a user starts rereading a book the pace should be calculated from the moment a book has been marked from completed to reading so the sessions that were logged starting from that time should be used to calculate the user pace
+
+create a microservice for fetching books, design a python api that gets data from zlibrary and feeds your download endpoint
+test oauth throughly before commiting
+create profile update endpoint to update username and password
+include email check with otp or email verification think about it 

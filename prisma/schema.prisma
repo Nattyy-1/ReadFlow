@@ -14,16 +14,20 @@ datasource db {
 
 // 1. User Model
 model User {
-  id        Int        @id @default(autoincrement())
-  username  String     @unique
-  password  String
-  email     String     @unique
-  createdAt DateTime   @default(now())
+  id                Int       @id @default(autoincrement())
+  username          String    @unique
+  email             String    @unique
+  password          String?
+ 
+  // OAuth tracking
+  googleId          String?   @unique
+  authProvider      String    @default("local")
+ 
+  createdAt         DateTime  @default(now())
 
-  resetToken  String?
+  resetToken        String?
   resetTokenExpires DateTime?
-  
-  // Relation: A user can have many books on their shelf
+ 
   userBooks UserBook[]
 }
 

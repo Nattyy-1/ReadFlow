@@ -3,11 +3,27 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { prisma } from '../prismaClient.js';
 import sendEmail from '../utils/sendEmail.js';
+import { OAuth2Client } from 'google-auth-library';
 
 class AuthService {
   constructor() {
     this.saltRounds = 10;
     this.jwtSecret = process.env.JWT_SECRET || 'this-is-a-fail-safe';
+    this.googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+  }
+
+  async #verifyGoogleToken(idToken) {
+    try {
+      const ticket = await this.googleClient.verifyIdToken({
+        idToken,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+      return ticket.getPayload();
+    } catch (error) {
+      const authError = new Error("Invalid or expired Google token");
+      authError.statusCode = 401;
+      throw authError;
+    }
   }
 
   async #hashPassword(password) {
@@ -17,6 +33,20 @@ class AuthService {
 
   async #verifyPassword(password, hash) {
     return await bcrypt.compare(password, hash);
+  }
+
+  async #generateUniqueUsername(name) {
+    const sourceName = name || "user";
+    let baseUsername = sourceName.replace(/\s+/g, '').toLowerCase();
+
+    const existingUser = await prisma.user.findUnique({
+      where: { username: baseUsername }
+    });
+
+    if (!existingUser) return baseUsername;
+
+    const suffix = Math.random().toString(36).substring(2, 6);
+    return `${baseUsername}_${suffix}`;
   }
 
   async register(username, email, password) {
@@ -182,6 +212,52 @@ class AuthService {
         resetTokenExpires: null
       }
     });
+  }
+  async googleLogin(idToken) {
+    const payload = await this.#verifyGoogleToken(idToken);
+    const { sub: googleId, email, name } = payload;
+
+    let user = await prisma.user.findUnique({
+      where: { googleId }
+    });
+
+    if (!user) {
+      user = await prisma.user.findUnique({
+        where: { email: email.toLowerCase() }
+      });
+
+      if (user) {
+        user = await prisma.user.update({
+          where: { id: user.id },
+          data: { googleId, authProvider: 'google' }
+        });
+      } else {
+        const username = await this.#generateUniqueUsername(name);
+        user = await prisma.user.create({
+          data: {
+            email: email.toLowerCase(),
+            username,
+            googleId,
+            authProvider: 'google'
+          }
+        });
+      }
+    }
+
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      this.jwtSecret,
+      { expiresIn: '7d' }
+    );
+
+    const {
+      password: _,
+      resetToken: __,
+      resetTokenExpires: ___,
+      ...userWithoutSensitiveData
+    } = user;
+
+    return { user: userWithoutSensitiveData, token };
   }
 }
 

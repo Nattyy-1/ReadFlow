@@ -67,6 +67,18 @@ class authController {
       message: "Password reset successful. You can now log in with your new password."
     });
   }
+
+  async googleLogin(req, res) {
+    const { idToken } = req.body;
+
+    const result = await authService.googleLogin(idToken);
+
+    res.status(200).json({
+      success: true,
+      message: "Google Login Successful",
+      ...result
+    });
+  }
 }
 
 export default new authController();

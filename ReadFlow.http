@@ -4,9 +4,9 @@ POST http://localhost:5000/api/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "test2@gmail.com",
+  "email": "natnaelsamson41@gmail.com",
   "password": "12345678",
-  "username": "test2"
+  "username": "natethegreat"
 }
 
 
@@ -16,15 +16,15 @@ POST http://localhost:5000/api/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "password": "newpassword",
-  "username": "test2"
+  "password": "12345678",
+  "username": "natethegreat"
 }
 
 
 ### Get a user profile GET /API/AUTH/ME
 
 GET http://localhost:5000/api/auth/me HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNTk4MSwiZXhwIjoxNzc1MDQwNzgxfQ._BeZY8apisZcVgY9CH6aIg2U1yKJeZtmKdqokWtZVUg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJuYXRldGhlZ3JlYXQiLCJpYXQiOjE3NzQ4ODM3MjQsImV4cCI6MTc3NTQ4ODUyNH0.o4XCN-njgv1vS_pFRabWT2Zj8DVrWLaAMV1mR2GXaK4
 
 
 ### Send a password reset token to the user POST /API/AUTH/FORGOT-PASSWORD
@@ -62,18 +62,18 @@ Content-Type: application/json
 
 ### Search for a book by title to add to shelf GET /API/BOOKS/SEARCH
 
-GET http://localhost:5000/api/books/search?title="The trial" HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNjQxNiwiZXhwIjoxNzc1MDQxMjE2fQ.njc8WmJMLCOsQhiaV9DKifG81KkhJn3Rn2Z8-j_USBw
+GET http://localhost:5000/api/books/search?title="Crime and punishment" HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJuYXRldGhlZ3JlYXQiLCJpYXQiOjE3NzQ4ODM4MTgsImV4cCI6MTc3NTQ4ODYxOH0.WGTznFl4hgzudW5u5wguEmx_ryHcX6rMyZlN1cUhDzQ
 
 
 ### Add a book to shelf POST /API/BOOKS/ADD
 
 POST http://localhost:5000/api/books/add HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNjQxNiwiZXhwIjoxNzc1MDQxMjE2fQ.njc8WmJMLCOsQhiaV9DKifG81KkhJn3Rn2Z8-j_USBw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJuYXRldGhlZ3JlYXQiLCJpYXQiOjE3NzQ4ODM4MTgsImV4cCI6MTc3NTQ4ODYxOH0.WGTznFl4hgzudW5u5wguEmx_ryHcX6rMyZlN1cUhDzQ
 
 {
-  "googleId": "i0FqEAAAQBAJ",
+  "googleId": "0HZrq-4zA5QC",
   "status": "READING"
 }
 
@@ -81,7 +81,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hb
 ### Get the books a user has added to his shelf GET /API/BOOKS
 
 GET http://localhost:5000/api/books/?status=READING HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNjQxNiwiZXhwIjoxNzc1MDQxMjE2fQ.njc8WmJMLCOsQhiaV9DKifG81KkhJn3Rn2Z8-j_USBw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJuYXRldGhlZ3JlYXQiLCJpYXQiOjE3NzQ4ODQxMTUsImV4cCI6MTc3NTQ4ODkxNX0.E-eEfdj3NcRcEkRbBrumvA-BFOiyViwSfxI94SSApuw
 
 
 ### Get details of a specific book like progress for a specific user GET /API/BOOKS/:id
@@ -151,10 +151,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hb
 ### Get all the sessions of a book GET /API/SESSIONS/BOOK/:id
 
 GET localhost:5000/api/sessions/book/2 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNjQxNiwiZXhwIjoxNzc1MDQxMjE2fQ.njc8WmJMLCOsQhiaV9DKifG81KkhJn3Rn2Z8-j_USBw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJuYXRldGhlZ3JlYXQiLCJpYXQiOjE3NzQ4ODQwNDUsImV4cCI6MTc3NTQ4ODg0NX0.nJd7lWpkwROmoNYvDWd2WgGJx2UJA0hea_jncdOOzFk
 
 
 ### Get all the sessions of a user GET /API/SESSIONS/
 
 GET localhost:5000/api/sessions HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ0ZXN0MiIsImlhdCI6MTc3NDQzNjQxNiwiZXhwIjoxNzc1MDQxMjE2fQ.njc8WmJMLCOsQhiaV9DKifG81KkhJn3Rn2Z8-j_USBw
+
+
+### Test Google OAuth Handshake
+
+POST http://localhost:5000/api/auth/google HTTP/1.1
+Content-Type: application/json
+
+{
+  "idToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImExMGU1OGRmNTVlNzI4NTY2ZWM1NmJkYTZlYjNiZDQ1NDM5ZjM1ZDciLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIyMzUzNjEzODg3NjAtY3Y0bjN1bmE4czU3bGYxaWpqaTBtbzkzN2hidXZtZG0uYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiIyMzUzNjEzODg3NjAtY3Y0bjN1bmE4czU3bGYxaWpqaTBtbzkzN2hidXZtZG0uYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTM1MjIzOTE4NDUyMTg2Njk5MDUiLCJlbWFpbCI6Im5hdG5hZWxzYW1zb240MUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6ImQ3Vl8wRVFhTDN5SmR0UGxwV1k5UnciLCJuYW1lIjoiTmF0bmFlbCBTYW1zb24iLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSWdlR2Y5c3ZLMm80VnJsLWZXbzhJeEpPNk1seGgyRkxHck0ya0xGZ2s5SDJXQmNRPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6Ik5hdG5hZWwiLCJmYW1pbHlfbmFtZSI6IlNhbXNvbiIsImlhdCI6MTc3NDg4MzY3NCwiZXhwIjoxNzc0ODg3Mjc0fQ.CHlgKt_5Rwc53eVQI5eaVs1GmFOsg5Fyy0qoOFClNvlhoRoFVu9ubl9-JeC5PTkrzLga0Nmxo9TsOH81-cg_BZaW_gUboT0dvno5x-gLjegIGRZDTib_NHKsJ8PnGKsvm6Ji8yX0x06AIKcym0DyT3mjRcCMccq9t2V74ZKYnoNlqau9SjOEUuFVMK1fwVhFntx2-dr6jSBPzZE03El1lDKlGCzCvAyddv5l-B8jnoBeiriSJ3KNt6Y8ualZgH0Hx9R7NAhkrqVCafsKYLmmMar4COkgqqCOSdItPU19rF157oOWOMlbbgRAZjenXwDqLLYtfy7FJBQGFSjQept9CA"
+}
