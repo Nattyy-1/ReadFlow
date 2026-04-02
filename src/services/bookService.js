@@ -3,6 +3,12 @@ import { prisma } from '../prismaClient.js';
 import sessionService from './sessionService.js';
 
 class bookService {
+  #createGoogleBooksError() {
+    const error = new Error('Unable to fetch book data from Google Books');
+    error.statusCode = 502;
+    return error;
+  }
+
   async searchBook(title) {
     const params = new URLSearchParams({
       q: `intitle:${title}`,
@@ -13,18 +19,21 @@ class bookService {
 
     const url = `https://www.googleapis.com/books/v1/volumes?${params}`;
 
-    const response = await axios.get(url);
+    try {
+      const response = await axios.get(url);
+      const items = response.data?.items;
 
-    if (!response.data.items) return [];
+      if (!items) return [];
 
-    const bookList = response.data.items.map(item => ({
-      googleId: item.id,
-      title: item.volumeInfo.title,
-      author: item.volumeInfo.authors?.[0] || 'Unknown Author',
-      thumbnail: item.volumeInfo.imageLinks?.thumbnail || ''
-    }));
-
-    return bookList;
+      return items.map(item => ({
+        googleId: item.id,
+        title: item.volumeInfo?.title || 'Unknown Title',
+        author: item.volumeInfo?.authors?.[0] || 'Unknown Author',
+        thumbnail: item.volumeInfo?.imageLinks?.thumbnail || ''
+      }));
+    } catch (error) {
+      throw this.#createGoogleBooksError();
+    }
   }
 
   async addBook(googleId, status, userId) {
@@ -39,13 +48,24 @@ class bookService {
       });
 
       const url = `https://www.googleapis.com/books/v1/volumes/${googleId}?${params}`;
-      const response = await axios.get(url);
-      const info = response.data.volumeInfo;
+      let response;
+
+      try {
+        response = await axios.get(url);
+      } catch (error) {
+        throw this.#createGoogleBooksError();
+      }
+
+      const info = response.data?.volumeInfo;
+
+      if (!response.data?.id || !info) {
+        throw this.#createGoogleBooksError();
+      }
 
       book = await prisma.book.create({
         data: {
           googleId: response.data.id,
-          title: info.title,
+          title: info.title || 'Unknown Title',
           author: info.authors?.[0] || "Unknown Author",
           thumbnail: info.imageLinks?.thumbnail || "",
           description: info.description || "",

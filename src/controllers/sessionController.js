@@ -15,8 +15,9 @@ class sessionController {
 
   async stopSession(req, res) {
     const { sessionId, currentPage } = req.body;
+    const userId = req.user.id;
 
-    const session = await sessionService.endSession(sessionId, currentPage);
+    const session = await sessionService.endSession(userId, sessionId, currentPage);
 
     res.status(200).json({
       success: true,

@@ -8,6 +8,9 @@
 - [x] P2002 → 409 "already taken" translation
 - [x] P2025 → 404 "not found" translation
 - [x] JWT error handling (invalid/expired)
+- [x] Reset URL uses APP_URL env var
+- [x] Runnable integration tests for auth, books, and sessions
+- [x] OAuth flow test coverage
 
 ---
 
@@ -34,11 +37,10 @@
 
 ## Edge Cases & Bug Fixes
 
-- [ ] timingSafeEqual length check (authService:188)
-- [ ] Google Books API try/catch (bookService:16)
-- [ ] Google Books response optional chaining (bookService:20-25)
-- [ ] GetPace returns null when no sessions (bookService:189)
-- [ ] Reset URL uses APP_URL env var (authService:148)
+- [x] timingSafeEqual length check (authService:188)
+- [x] Google Books API try/catch (bookService:16)
+- [x] Google Books response optional chaining (bookService:20-25)
+- [ ] Review getPace behavior for no-session books and decide between 404 vs 0/null
 - [ ] Pace recalculation on re-read (bookService)
 - [ ] Express.json limit + compression (server.js)
 - [ ] Session duration loses sub-second precision (sessionService:77)
@@ -50,7 +52,7 @@
 - [ ] Extract token generation to private method (authService)
 - [ ] Combine DB queries in sessionService:startSession
 - [ ] Add Prisma transaction for status changes (sessionService)
-- [ ] Email failure should be silent or caught (authService:125-127)
+- [x] Email failure should be silent or caught (authService:125-127)
 
 ---
 
@@ -64,7 +66,7 @@
 ## Features
 
 - [ ] Profile update endpoint
-- [ ] OAuth testing + polish
+- [x] OAuth testing + polish
 - [ ] Pagination on getBooks
 - [ ] AI Recommendations (Gemini)
 - [ ] Z-Library microservice
@@ -74,7 +76,7 @@
 ## Testing
 
 - [ ] Unit tests for services (auth, books, sessions)
-- [ ] Integration tests with Supertest
+- [x] Integration tests for API-critical paths
 - [ ] 80%+ coverage on critical paths
 
 ---

@@ -1,6 +1,7 @@
 import rateLimit from 'express-rate-limit';
 
 export const apiLimiter = rateLimit({
+  skip: () => process.env.NODE_ENV === 'test',
   windowMs: 15 * 60 * 1000,
   limit: 100,
   message: {
@@ -12,6 +13,7 @@ export const apiLimiter = rateLimit({
 });
 
 export const strictLimiter = rateLimit({
+  skip: () => process.env.NODE_ENV === 'test',
   windowMs: 15 * 60 * 1000,
   limit: 10,
   message: {

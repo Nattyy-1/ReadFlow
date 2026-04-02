@@ -8,8 +8,7 @@ import bookRoutes from './routes/bookRoutes.js';
 import sessionRoutes from './routes/sessionRoutes.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+export const app = express();
 
 app.use(cors({
   origin: '*',
@@ -32,6 +31,18 @@ app.use((req, res) => {
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server listening on port: ${PORT}`);
-});
+export const startServer = (port = process.env.PORT || 5000) => {
+  const server = app.listen(port);
+
+  server.once('listening', () => {
+    const address = server.address();
+    const resolvedPort = typeof address === 'object' && address ? address.port : port;
+    console.log(`Server listening on port: ${resolvedPort}`);
+  });
+
+  return server;
+};
+
+if (import.meta.main) {
+  startServer();
+}

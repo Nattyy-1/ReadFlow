@@ -40,9 +40,14 @@ class sessionService {
     });
   }
 
-  async endSession(sessionId, currentPage) {
-    const activeSession = await prisma.readingSession.findUnique({
-      where: { id: sessionId },
+  async endSession(userId, sessionId, currentPage) {
+    const activeSession = await prisma.readingSession.findFirst({
+      where: {
+        id: sessionId,
+        userBook: {
+          userId
+        }
+      },
       include: {
         userBook: {
           include: { book: true }
@@ -58,7 +63,6 @@ class sessionService {
 
     const previousPage = activeSession.userBook.currentPage;
     const totalPageCount = activeSession.userBook.book.pageCount;
-    const userId = activeSession.userBook.userId;
     const bookId = activeSession.userBook.bookId;
 
     if (currentPage < previousPage) {

@@ -8,9 +8,13 @@ const googleIdSchema = z.string()
   .trim()
   .min(1, "GoogleId must be provided");
 
-const statusSchema = z.enum(['WANT_TO_READ', 'READING', 'COMPLETED'], {
-  errorMap: () => ({ message: "Invalid Reading Status provided. Must be WANT_TO_READ, READING, or COMPLETED" })
-});
+const validStatusMessage = "Invalid Reading Status provided. Must be WANT_TO_READ, READING, or COMPLETED";
+const statusSchema = z.string()
+  .trim()
+  .refine(
+    (value) => ['WANT_TO_READ', 'READING', 'COMPLETED'].includes(value),
+    validStatusMessage
+  );
 
 const ratingSchema = z.coerce.number({
   invalid_type_error: "Rating must be a valid number"

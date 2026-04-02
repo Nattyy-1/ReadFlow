@@ -145,7 +145,8 @@ class AuthService {
       }
     });
 
-    const resetUrl = `https://readflow.com/reset-password?token=${resetToken}&email=${email}`;
+    const appUrl = (process.env.APP_URL || 'http://localhost:5000').replace(/\/$/, '');
+    const resetUrl = `${appUrl}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;
 
     const message = `
       You requested a password reset for your ReadFlow account.
@@ -156,11 +157,15 @@ class AuthService {
       If you did not request this, please ignore this email.
     `.trim();
 
-    await sendEmail({
-      email: user.email,
-      subject: 'ReadFlow Password Reset',
-      message: message,
-    });
+    try {
+      await sendEmail({
+        email: user.email,
+        subject: 'ReadFlow Password Reset',
+        message: message,
+      });
+    } catch (error) {
+      console.error('Failed to send password reset email', error);
+    }
   }
 
   async verifyResetToken(email, token) {
@@ -184,6 +189,12 @@ class AuthService {
       .createHash('sha256')
       .update(token)
       .digest('hex');
+
+    if (user.resetToken.length !== hashedIncomingToken.length) {
+      const error = new Error('Invalid reset token');
+      error.statusCode = 400;
+      throw error;
+    }
 
     const isMatch = crypto.timingSafeEqual(
       Buffer.from(user.resetToken),

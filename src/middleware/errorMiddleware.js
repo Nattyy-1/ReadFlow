@@ -2,8 +2,8 @@ const errorHandler = (err, req, res, next) => {
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Internal Server Error';
 
-  console.error(`Error: ${message}`.red);
-  if (process.env.NODE_ENV !== 'production') {
+  console.error(`Error: ${message}`);
+  if (process.env.NODE_ENV === 'development') {
     console.error(err.stack);
   }
 

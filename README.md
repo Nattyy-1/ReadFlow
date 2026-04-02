@@ -20,6 +20,7 @@ Node.js · Express · Prisma · SQLite · Zod · JWT
 npm install
 cp .env.example .env   # add your values
 npx prisma migrate dev
+npm test
 npm run dev
 ```
 
@@ -31,37 +32,48 @@ JWT_SECRET
 GOOGLE_CLIENT_ID
 GOOGLE_BOOKS_API_KEY
 SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS
-APP_URL, PORT
+APP_URL             # used for password reset links
+PORT
 ```
 
 ## API
 
 ```
 Auth
-  POST   /auth/register
-  POST   /auth/login
-  POST   /auth/google
-  GET    /auth/me
-  POST   /auth/forgot-password
-  POST   /auth/verify-reset-token
-  PUT    /auth/reset-password
+  POST   /api/auth/register
+  POST   /api/auth/login
+  POST   /api/auth/google
+  GET    /api/auth/me
+  POST   /api/auth/forgot-password
+  POST   /api/auth/verify-reset-token
+  PUT    /api/auth/reset-password
 
 Books
-  GET    /books/search?title=foo
-  POST   /books/add
-  GET    /books
-  GET    /books/:id
-  PATCH  /books/:id              # status: WANT_TO_READ | READING | COMPLETED
-  DELETE /books/:id
-  PATCH  /books/:id/review        # rating, review
-  GET    /books/:id/pace
+  GET    /api/books/search?title=foo
+  POST   /api/books/add
+  GET    /api/books
+  GET    /api/books/:id
+  PATCH  /api/books/:id              # status: WANT_TO_READ | READING | COMPLETED
+  DELETE /api/books/:id
+  PATCH  /api/books/:id/review       # rating, review
+  GET    /api/books/:id/pace
 
 Sessions
-  POST   /sessions/start         # returns sessionId
-  POST   /sessions/stop          # { sessionId, currentPage }
-  GET    /sessions/book/:id      # sessions for one book
-  GET    /sessions              # all sessions (for pace/heatmap viz)
+  POST   /api/sessions/start        # returns sessionId
+  POST   /api/sessions/stop         # { sessionId, currentPage }
+  GET    /api/sessions/book/:id     # sessions for one book
+  GET    /api/sessions              # all sessions (for pace/heatmap viz)
 ```
+
+## Testing
+
+`npm test` runs an integration suite against the real Express app and an isolated SQLite database.
+
+External integrations are mocked only at the service boundary:
+
+- Google Books HTTP responses
+- Google OAuth token verification
+- SMTP email delivery
 
 ## Project Structure
 
