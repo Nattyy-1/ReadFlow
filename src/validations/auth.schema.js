@@ -59,3 +59,12 @@ export const googleLoginSchema = z.object({
     idToken: z.string().min(1, "Google ID Token is required")
   })
 });
+
+export const updateProfileSchema = z.object({
+  body: z.object({
+    username: z.string().trim().min(3, "Username must be at least 3 characters").optional(),
+    password: z.string().trim().min(8, "Password must be at least 8 characters").optional()
+  }).refine(data => data.username || data.password, {
+    message: "At least username or password is required"
+  })
+});

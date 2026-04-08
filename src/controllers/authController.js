@@ -79,6 +79,20 @@ class authController {
       ...result
     });
   }
+
+  async updateProfile(req, res) {
+    const userId = req.user.id;
+    const { username, password } = req.body;
+
+    const updatedProfile = await authService.updateProfile(userId, username, password);
+
+    res.status(200).json({
+      success: true,
+      message: "Profile Update Successful",
+      ...updatedProfile
+    });
+
+  }
 }
 
 export default new authController();

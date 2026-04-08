@@ -270,6 +270,38 @@ class AuthService {
 
     return { user: userWithoutSensitiveData, token };
   }
+
+  async updateProfile(userId, username, password) {
+    if (username) {
+      const existingUsername = await prisma.user.findFirst({
+        where: { username }
+      });
+      if (existingUsername && existingUsername.id !== userId) {
+        const error = new Error("Username is already taken");
+        error.statusCode = 409;
+        throw error;
+      }
+    }
+
+    const updateData = {
+      ...(username && { username }),
+      ...(password && { password: await bcrypt.hash(password, this.saltRounds) })
+    };
+
+    const updatedProfile = await prisma.user.update({
+      where: { id: userId },
+      data: updateData
+    });
+
+    const {
+      password: _,
+      resetToken: __,
+      resetTokenExpires: ___,
+      ...userWithoutSensitiveData
+    } = updatedProfile;
+
+    return { user: userWithoutSensitiveData };
+  }
 }
 
 export default new AuthService();

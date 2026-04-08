@@ -15,5 +15,6 @@ router.post('/forgot-password', strictLimiter, validate(authSchemas.forgotPasswo
 router.post('/verify-reset-token', validate(authSchemas.verifyResetTokenSchema), asyncHandler(authController.verifyResetToken));
 router.put('/reset-password', strictLimiter, validate(authSchemas.resetPasswordSchema), asyncHandler(authController.resetPassword));
 router.post('/google', strictLimiter, validate(authSchemas.googleLoginSchema), asyncHandler(authController.googleLogin));
+router.put('/update-profile', authMiddleware, strictLimiter, validate(authSchemas.updateProfileSchema), asyncHandler(authController.updateProfile));
 
 export default router;

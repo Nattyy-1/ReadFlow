@@ -765,6 +765,159 @@ defineTest('rejects invalid session input and impossible page progression', asyn
   assert.equal(lowerPage.status, 400);
 });
 
+defineTest('updates username successfully', async () => {
+  const { token, user } = await registerAndLogin({
+    username: 'updateuser1',
+    email: 'updateuser1@example.com'
+  });
+
+  assert.equal(user.username, 'updateuser1');
+
+  const updateResponse = await request('PUT', '/api/auth/update-profile', {
+    token,
+    body: { username: 'newusername1' }
+  });
+
+  assert.equal(updateResponse.status, 200);
+  assert.equal(updateResponse.data.user.username, 'newusername1');
+
+  const meResponse = await request('GET', '/api/auth/me', { token });
+  assert.equal(meResponse.data.user.username, 'newusername1');
+});
+
+defineTest('updates password successfully and can login with new password', async () => {
+  await registerAndLogin({
+    username: 'updatepass1',
+    email: 'updatepass1@example.com',
+    password: 'oldpassword123'
+  });
+
+  const loginWithOld = await request('POST', '/api/auth/login', {
+    body: { username: 'updatepass1', password: 'oldpassword123' }
+  });
+  assert.equal(loginWithOld.status, 200);
+
+  const updateResponse = await request('PUT', '/api/auth/update-profile', {
+    token: loginWithOld.data.token,
+    body: { password: 'newpassword456' }
+  });
+
+  assert.equal(updateResponse.status, 200);
+
+  const loginWithOldAgain = await request('POST', '/api/auth/login', {
+    body: { username: 'updatepass1', password: 'oldpassword123' }
+  });
+  assert.equal(loginWithOldAgain.status, 401);
+
+  const loginWithNew = await request('POST', '/api/auth/login', {
+    body: { username: 'updatepass1', password: 'newpassword456' }
+  });
+  assert.equal(loginWithNew.status, 200);
+});
+
+defineTest('updates both username and password successfully', async () => {
+  const { token } = await registerAndLogin({
+    username: 'bothupdate1',
+    email: 'bothupdate1@example.com',
+    password: 'oldpass123'
+  });
+
+  const updateResponse = await request('PUT', '/api/auth/update-profile', {
+    token,
+    body: { username: 'bothupdate2', password: 'newpass456' }
+  });
+
+  assert.equal(updateResponse.status, 200);
+  assert.equal(updateResponse.data.user.username, 'bothupdate2');
+
+  const loginNew = await request('POST', '/api/auth/login', {
+    body: { username: 'bothupdate2', password: 'newpass456' }
+  });
+  assert.equal(loginNew.status, 200);
+});
+
+defineTest('updating to same username succeeds (no change)', async () => {
+  const { token } = await registerAndLogin({
+    username: 'sameuser1',
+    email: 'sameuser1@example.com'
+  });
+
+  const updateResponse = await request('PUT', '/api/auth/update-profile', {
+    token,
+    body: { username: 'sameuser1' }
+  });
+
+  assert.equal(updateResponse.status, 200);
+  assert.equal(updateResponse.data.user.username, 'sameuser1');
+});
+
+defineTest('rejects update when username is already taken by another user', async () => {
+  await registerAndLogin({
+    username: 'takenuser1',
+    email: 'takenuser1@example.com'
+  });
+
+  const { token } = await registerAndLogin({
+    username: 'updateuser2',
+    email: 'updateuser2@example.com'
+  });
+
+  const updateResponse = await request('PUT', '/api/auth/update-profile', {
+    token,
+    body: { username: 'takenuser1' }
+  });
+
+  assert.equal(updateResponse.status, 409);
+  assert.equal(updateResponse.data.error, 'Username is already taken');
+});
+
+defineTest('rejects update without any valid fields', async () => {
+  const { token } = await registerAndLogin({
+    username: 'emptyupdate1',
+    email: 'emptyupdate1@example.com'
+  });
+
+  const updateResponse = await request('PUT', '/api/auth/update-profile', {
+    token,
+    body: {}
+  });
+
+  assert.equal(updateResponse.status, 400);
+  assert.ok(updateResponse.data.error['']);
+});
+
+defineTest('rejects invalid username and password input', async () => {
+  const { token } = await registerAndLogin({
+    username: 'invalidupdate1',
+    email: 'invalidupdate1@example.com'
+  });
+
+  const shortUsername = await request('PUT', '/api/auth/update-profile', {
+    token,
+    body: { username: 'ab' }
+  });
+
+  assert.equal(shortUsername.status, 400);
+  assert.ok(shortUsername.data.error.username);
+
+  const shortPassword = await request('PUT', '/api/auth/update-profile', {
+    token,
+    body: { password: '1234567' }
+  });
+
+  assert.equal(shortPassword.status, 400);
+  assert.ok(shortPassword.data.error.password);
+});
+
+defineTest('requires authentication for update-profile', async () => {
+  const response = await request('PUT', '/api/auth/update-profile', {
+    body: { username: 'someuser' }
+  });
+
+  assert.equal(response.status, 401);
+  assert.equal(response.data.message, 'No token provided or invalid format');
+});
+
 async function run() {
   let passed = 0;
   let failed = 0;

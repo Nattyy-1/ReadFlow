@@ -60,6 +60,17 @@ Content-Type: application/json
 }
 
 
+### Update a users profile PUT /API/AUTH/UPDATE-PROFILE
+
+PUT http://localhost:5000/api/auth/update-profile HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJuYXRldGhlZ3JlYXQiLCJpYXQiOjE3NzU2NjcxNDEsImV4cCI6MTc3NjI3MTk0MX0.Cw3hmfZubD_2mJBuTAdYdJCu3vjX_d7dL9eAU0Co7Ns
+
+{
+  "username": "natethegreat"
+}
+
+
 ### Search for a book by title to add to shelf GET /API/BOOKS/SEARCH
 
 GET http://localhost:5000/api/books/search?title="Crime and punishment" HTTP/1.1
