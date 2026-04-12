@@ -4,19 +4,20 @@ import crypto from 'crypto';
 import { prisma } from '../prismaClient.js';
 import sendEmail from '../utils/sendEmail.js';
 import { OAuth2Client } from 'google-auth-library';
+import { config } from '../config/index.js';
 
 class AuthService {
   constructor() {
     this.saltRounds = 10;
-    this.jwtSecret = process.env.JWT_SECRET || 'this-is-a-fail-safe';
-    this.googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+    this.jwtSecret = config.jwtSecret;
+    this.googleClient = new OAuth2Client(config.google.clientId);
   }
 
   async #verifyGoogleToken(idToken) {
     try {
       const ticket = await this.googleClient.verifyIdToken({
         idToken,
-        audience: process.env.GOOGLE_CLIENT_ID,
+        audience: config.google.clientId,
       });
       return ticket.getPayload();
     } catch (error) {
@@ -145,7 +146,7 @@ class AuthService {
       }
     });
 
-    const appUrl = (process.env.APP_URL || 'http://localhost:5000').replace(/\/$/, '');
+    const appUrl = (config.appUrl || 'http://localhost:5000').replace(/\/$/, '');
     const resetUrl = `${appUrl}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;
 
     const message = `

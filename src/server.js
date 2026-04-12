@@ -7,6 +7,7 @@ import errorHandler from './middleware/errorMiddleware.js';
 import bookRoutes from './routes/bookRoutes.js';
 import sessionRoutes from './routes/sessionRoutes.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
+import { config } from './config/index.js';
 
 export const app = express();
 
@@ -31,7 +32,7 @@ app.use((req, res) => {
 
 app.use(errorHandler);
 
-export const startServer = (port = process.env.PORT || 5000) => {
+export const startServer = (port = config.port) => {
   const server = app.listen(port);
 
   server.once('listening', () => {

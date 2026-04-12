@@ -1,12 +1,12 @@
 import nodemailer from 'nodemailer';
+import { config } from '../config/index.js';
 
 const sendEmail = async (options) => {
-  const host = process.env.SMTP_HOST || process.env.MAIL_HOST;
-  const port = Number(process.env.SMTP_PORT || process.env.MAIL_PORT);
-  const user = process.env.SMTP_USER || process.env.MAIL_USER;
-  const pass = process.env.SMTP_PASS || process.env.MAIL_PASS;
+  const host = config.mail.host;
+  const port = Number(config.port);
+  const user = config.mail.user;
+  const pass = config.mail.password;
 
-  // 1. Create a transporter
   const transporter = nodemailer.createTransport({
     host,
     port,
@@ -17,7 +17,6 @@ const sendEmail = async (options) => {
     },
   });
 
-  // 2. Define the email contents
   const mailOptions = {
     from: '"ReadFlow" <noreply@ReadFlow.com>',
     to: options.email,
@@ -26,7 +25,6 @@ const sendEmail = async (options) => {
     // Add html: options.html here later if you want a pretty email
   };
 
-  // 3. Send it
   await transporter.sendMail(mailOptions);
 };
 

@@ -1,9 +1,11 @@
+import { config } from '../config/index.js';
+
 const errorHandler = (err, req, res, next) => {
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Internal Server Error';
 
   console.error(`Error: ${message}`);
-  if (process.env.NODE_ENV === 'development') {
+  if (config.nodeEnv === 'development') {
     console.error(err.stack);
   }
 
@@ -59,7 +61,7 @@ const errorHandler = (err, req, res, next) => {
   res.status(statusCode).json({
     success: false,
     error: message,
-    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    stack: config.nodeEnv === 'development' ? err.stack : undefined
   });
 };
 

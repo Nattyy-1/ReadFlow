@@ -26,14 +26,19 @@ npm run dev
 
 ## Environment Variables
 
+All env vars are centralized in `src/config/index.js` with fail-fast validation on startup.
+
 ```
-DATABASE_URL        # SQLite: file:./dev.db
-JWT_SECRET
-GOOGLE_CLIENT_ID
+DATABASE_URL        # SQLite: file:./dev.db (required)
+JWT_SECRET          # required
+GOOGLE_CLIENT_ID    # required
+GOOGLE_CLIENT_SECRET # required
 GOOGLE_BOOKS_API_KEY
 SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS
 APP_URL             # used for password reset links
+FRONTEND_URL        # optional
 PORT
+NODE_ENV            # development | production | test
 ```
 
 ## API
@@ -44,6 +49,7 @@ Auth
   POST   /api/auth/login
   POST   /api/auth/google
   GET    /api/auth/me
+  PUT    /api/auth/profile      # update username and/or password
   POST   /api/auth/forgot-password
   POST   /api/auth/verify-reset-token
   PUT    /api/auth/reset-password
@@ -79,11 +85,12 @@ External integrations are mocked only at the service boundary:
 
 ```
 src/
+├── config/           # Centralized env var config with validation
 ├── controllers/      # Route handlers
 ├── services/         # Business logic
 ├── routes/           # Express routers
 ├── middleware/       # Auth, validation, rate limiting, error handling
-├── validations/     # Zod schemas
+├── validations/      # Zod schemas
 └── server.js        # Entry point
 ```
 

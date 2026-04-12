@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { config } from '../config/index.js';
 
 export const authMiddleware = (req, res, next) => {
   const authHeader = req.headers['authorization'];
@@ -9,7 +10,7 @@ export const authMiddleware = (req, res, next) => {
 
   const token = authHeader.split(' ')[1];
 
-  jwt.verify(token, process.env.JWT_SECRET || 'this-is-a-fail-safe', (err, decoded) => {
+  jwt.verify(token, config.jwtSecret, (err, decoded) => {
     if (err) return res.status(401).json({ message: "Invalid or expired token" });
 
     req.user = {

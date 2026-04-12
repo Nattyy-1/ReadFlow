@@ -16,7 +16,7 @@
 
 ## Auth Overhaul
 
-- [ ] Extract JWT_SECRET to shared config
+- [x] Extract JWT_SECRET to shared config
 - [ ] Add logout endpoint
 - [ ] Implement Redis connection
 - [ ] Token blacklisting on logout
@@ -28,8 +28,8 @@
 
 ## Core Infrastructure
 
-- [ ] Create config.js with all env vars (fail-fast validation)
-- [ ] Remove scattered process.env calls, use config
+- [x] Create config.js with all env vars (fail-fast validation)
+- [x] Remove scattered process.env calls, use config
 - [ ] Add Morgan (HTTP logs) + Winston (error logs)
 - [ ] Graceful shutdown handler
 
@@ -65,7 +65,7 @@
 
 ## Features
 
-- [ ] Profile update endpoint
+- [x] Profile update endpoint
 - [x] OAuth testing + polish
 - [ ] Pagination on getBooks
 - [ ] AI Recommendations (Gemini)

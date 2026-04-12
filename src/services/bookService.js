@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { prisma } from '../prismaClient.js';
 import sessionService from './sessionService.js';
+import { config } from '../config/index.js';
 
 class bookService {
   #createGoogleBooksError() {
@@ -14,7 +15,7 @@ class bookService {
       q: `intitle:${title}`,
       maxResults: 10,
       fields: "items(id,volumeInfo(title,authors,publishedDate,imageLinks/thumbnail))",
-      key: process.env.GOOGLE_BOOKS_API_KEY
+      key: config.bookApiKey
     });
 
     const url = `https://www.googleapis.com/books/v1/volumes?${params}`;
@@ -44,7 +45,7 @@ class bookService {
     if (!book) {
       const params = new URLSearchParams({
         fields: "id,volumeInfo(title,authors,description,pageCount,categories,imageLinks/thumbnail)",
-        key: process.env.GOOGLE_BOOKS_API_KEY
+        key: config.bookApiKey
       });
 
       const url = `https://www.googleapis.com/books/v1/volumes/${googleId}?${params}`;
