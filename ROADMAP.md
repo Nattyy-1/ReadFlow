@@ -31,7 +31,7 @@
 - [x] Create config.js with all env vars (fail-fast validation)
 - [x] Remove scattered process.env calls, use config
 - [ ] Add Morgan (HTTP logs) + Winston (error logs)
-- [ ] Graceful shutdown handler
+- [x] Graceful shutdown handler
 
 ---
 
@@ -49,15 +49,13 @@
 ## Code Quality
 
 - [x] Extract token generation to private method (authService)
-- [ ] Combine DB queries in sessionService:startSession
-- [ ] Add Prisma transaction for status changes (sessionService)
+- [x] Add Prisma transaction for status changes (sessionService)
 - [x] Email failure should be silent or caught (authService:125-127)
 
 ---
 
 ## Security
 
-- [ ] Restrict CORS to known domains
 - [ ] Email verification flow (OTP or link)
 
 ---

@@ -9,6 +9,7 @@ import bookRoutes from './routes/bookRoutes.js';
 import sessionRoutes from './routes/sessionRoutes.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
 import { config } from './config/index.js';
+import { prisma } from './prismaClient.js';
 
 export const app = express();
 
@@ -42,6 +43,17 @@ export const startServer = (port = config.port) => {
     const resolvedPort = typeof address === 'object' && address ? address.port : port;
     console.log(`Server listening on port: ${resolvedPort}`);
   });
+
+  const shutdown = async (signal) => {
+    console.log(`\n${signal} received. Shutting down gracefully...`);
+    server.close();
+    await prisma.$disconnect();
+    console.log('Cleanup complete. Goodbye!');
+    process.exit(0);
+  };
+
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
 
   return server;
 };

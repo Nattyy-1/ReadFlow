@@ -81,16 +81,20 @@ class sessionService {
     const durationInSeconds = Math.floor((endTime - activeSession.startTime) / 1000);
     const pagesReadDuringSession = currentPage - previousPage;
 
-    const updatedSession = await prisma.readingSession.update({
-      where: { id: sessionId },
-      data: {
-        endTime: endTime,
-        pagesRead: pagesReadDuringSession,
-        duration: durationInSeconds
-      }
-    });
-
-    await bookService.updatePage(userId, bookId, currentPage);
+    const [updatedSession] = await prisma.$transaction([
+      prisma.readingSession.update({
+        where: { id: sessionId },
+        data: {
+          endTime: endTime,
+          pagesRead: pagesReadDuringSession,
+          duration: durationInSeconds
+        }
+      }),
+      prisma.userBook.update({
+        where: { userId_bookId: { userId, bookId } },
+        data: { currentPage }
+      })
+    ]);
 
     if (currentPage === totalPageCount) {
       await bookService.updateBookStatus(userId, bookId, 'COMPLETED');
