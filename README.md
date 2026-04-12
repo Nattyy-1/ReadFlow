@@ -49,7 +49,7 @@ Auth
   POST   /api/auth/login
   POST   /api/auth/google
   GET    /api/auth/me
-  PUT    /api/auth/profile      # update username and/or password
+  PUT    /api/auth/update-profile  # update username and/or password
   POST   /api/auth/forgot-password
   POST   /api/auth/verify-reset-token
   PUT    /api/auth/reset-password
