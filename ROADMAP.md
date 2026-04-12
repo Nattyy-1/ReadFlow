@@ -40,16 +40,15 @@
 - [x] timingSafeEqual length check (authService:188)
 - [x] Google Books API try/catch (bookService:16)
 - [x] Google Books response optional chaining (bookService:20-25)
-- [ ] Review getPace behavior for no-session books and decide between 404 vs 0/null
+- [x] getPace returns 0 for no-session books (bookService:201)
 - [ ] Pace recalculation on re-read (bookService)
-- [ ] Express.json limit + compression (server.js)
-- [ ] Session duration loses sub-second precision (sessionService:77)
+- [x] Express.json limit + compression (server.js)
 
 ---
 
 ## Code Quality
 
-- [ ] Extract token generation to private method (authService)
+- [x] Extract token generation to private method (authService)
 - [ ] Combine DB queries in sessionService:startSession
 - [ ] Add Prisma transaction for status changes (sessionService)
 - [x] Email failure should be silent or caught (authService:125-127)

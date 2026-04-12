@@ -199,9 +199,7 @@ class bookService {
     const sessions = await sessionService.getSessions(userId, bookId);
 
     if (!sessions || sessions.length === 0) {
-      const error = new Error("No sessions found for this book");
-      error.statusCode = 404;
-      throw error;
+      return 0;
     }
 
     const totalPages = sessions.reduce((sum, s) => sum + (s.pagesRead || 0), 0);

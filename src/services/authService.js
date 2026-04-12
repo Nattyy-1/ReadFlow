@@ -50,6 +50,14 @@ class AuthService {
     return `${baseUsername}_${suffix}`;
   }
 
+  #generateToken(user) {
+    return jwt.sign(
+      { id: user.id, username: user.username },
+      this.jwtSecret,
+      { expiresIn: '7d' }
+    );
+  }
+
   async register(username, email, password) {
     const hashedPassword = await this.#hashPassword(password);
 
@@ -61,11 +69,7 @@ class AuthService {
       }
     });
 
-    const token = jwt.sign(
-      { id: user.id, username: user.username },
-      this.jwtSecret,
-      { expiresIn: '7d' }
-    );
+    const token = this.#generateToken(user);
 
     const { password: _, ...userWithoutPassword } = user;
     return {
@@ -85,11 +89,7 @@ class AuthService {
       throw error;
     }
 
-    const token = jwt.sign(
-      { id: user.id, username: user.username },
-      this.jwtSecret,
-      { expiresIn: '7d' }
-    );
+    const token = this.#generateToken(user);
 
     const {
       password: _,
@@ -256,11 +256,7 @@ class AuthService {
       }
     }
 
-    const token = jwt.sign(
-      { id: user.id, username: user.username },
-      this.jwtSecret,
-      { expiresIn: '7d' }
-    );
+    const token = this.#generateToken(user);
 
     const {
       password: _,

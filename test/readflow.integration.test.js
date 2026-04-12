@@ -550,7 +550,8 @@ defineTest('returns not found or upstream errors for missing book state and Goog
   assert.equal(missingBook.status, 404);
 
   const missingPace = await request('GET', '/api/books/9999/pace', { token });
-  assert.equal(missingPace.status, 404);
+  assert.equal(missingPace.status, 200);
+  assert.equal(missingPace.data.pace, 0);
 
   forceGoogleBooksFailure = true;
   const failedSearch = await request('GET', '/api/books/search?title=crime', { token });
