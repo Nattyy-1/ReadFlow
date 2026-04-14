@@ -2,6 +2,7 @@ import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
+import morgan from 'morgan';
 import authRoutes from './routes/authRoutes.js';
 import { authMiddleware } from './middleware/authMiddleware.js';
 import errorHandler from './middleware/errorMiddleware.js';
@@ -10,6 +11,7 @@ import sessionRoutes from './routes/sessionRoutes.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
 import { config } from './config/index.js';
 import { prisma } from './prismaClient.js';
+import logger, { morganStream } from './utils/logger.js';
 
 export const app = express();
 
@@ -21,6 +23,7 @@ app.use(cors({
 app.use(helmet());
 app.use(compression());
 app.use(express.json({ limit: '10kb' }));
+app.use(morgan('combined', { stream: morganStream }));
 
 app.use('/api', apiLimiter);
 app.use('/api/auth', authRoutes);
@@ -41,14 +44,14 @@ export const startServer = (port = config.port) => {
   server.once('listening', () => {
     const address = server.address();
     const resolvedPort = typeof address === 'object' && address ? address.port : port;
-    console.log(`Server listening on port: ${resolvedPort}`);
+    logger.info(`Server listening on port ${resolvedPort}`);
   });
 
   const shutdown = async (signal) => {
-    console.log(`\n${signal} received. Shutting down gracefully...`);
+    logger.info(`${signal} received. Shutting down gracefully...`);
     server.close();
     await prisma.$disconnect();
-    console.log('Cleanup complete. Goodbye!');
+    logger.info('Cleanup complete. Goodbye!');
     process.exit(0);
   };
 

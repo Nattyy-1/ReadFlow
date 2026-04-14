@@ -2,6 +2,7 @@ import axios from 'axios';
 import { prisma } from '../prismaClient.js';
 import sessionService from './sessionService.js';
 import { config } from '../config/index.js';
+import logger from '../utils/logger.js';
 
 class bookService {
   #createGoogleBooksError() {
@@ -33,6 +34,10 @@ class bookService {
         thumbnail: item.volumeInfo?.imageLinks?.thumbnail || ''
       }));
     } catch (error) {
+      logger.error('Google Books API search failed', {
+        endpoint: '/volumes',
+        error: error.message
+      });
       throw this.#createGoogleBooksError();
     }
   }
@@ -54,6 +59,10 @@ class bookService {
       try {
         response = await axios.get(url);
       } catch (error) {
+        logger.error('Google Books API fetch book failed', {
+          googleId,
+          error: error.message
+        });
         throw this.#createGoogleBooksError();
       }
 
@@ -101,6 +110,14 @@ class bookService {
         book: true
       }
     });
+
+    logger.info('Book added to shelf', {
+      userId,
+      bookId: result.book.id,
+      status: result.status
+    });
+
+    return result;
   }
 
   async getBooks(userId, status) {
@@ -135,7 +152,7 @@ class bookService {
   }
 
   async updateBookStatus(userId, bookId, status) {
-    return await prisma.userBook.update({
+    const result = await prisma.userBook.update({
       where: {
         userId_bookId: {
           userId,
@@ -147,10 +164,14 @@ class bookService {
         endDate: status === 'COMPLETED' ? new Date() : undefined,
       }
     });
+
+    logger.info('Book status updated', { userId, bookId, status });
+
+    return result;
   }
 
   async deleteBook(userId, bookId) {
-    return await prisma.userBook.delete({
+    const result = await prisma.userBook.delete({
       where: {
         userId_bookId: {
           userId,
@@ -158,6 +179,10 @@ class bookService {
         }
       }
     });
+
+    logger.info('Book removed from shelf', { userId, bookId });
+
+    return result;
   }
 
   async resetBookProgress(userId, bookId) {
@@ -173,7 +198,7 @@ class bookService {
   }
 
   async updateReview(userId, bookId, rating, review = null) {
-    return await prisma.userBook.update({
+    const result = await prisma.userBook.update({
       where: {
         userId_bookId: { userId, bookId }
       },
@@ -182,6 +207,10 @@ class bookService {
         review
       }
     });
+
+    logger.info('Book review added', { userId, bookId, rating });
+
+    return result;
   }
 
   async getPace(userId, bookId) {

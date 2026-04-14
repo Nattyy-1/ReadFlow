@@ -1,13 +1,18 @@
 import { config } from '../config/index.js';
+import logger from '../utils/logger.js';
 
 const errorHandler = (err, req, res, next) => {
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Internal Server Error';
 
-  console.error(`Error: ${message}`);
-  if (config.nodeEnv === 'development') {
-    console.error(err.stack);
-  }
+  logger.error('Request error', {
+    statusCode,
+    message,
+    path: req.originalUrl,
+    method: req.method,
+    userId: req.user?.id,
+    stack: config.nodeEnv === 'development' ? err.stack : undefined
+  });
 
   if (err.code === 'P2002') {
     let field = 'record';

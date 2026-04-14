@@ -1,8 +1,11 @@
 node_modules
-.env
+.env 
 
 /src/generated/prisma
 dev.db
 dev.db-journal
 
 EXECUTION.md
+
+logs/
+*.log

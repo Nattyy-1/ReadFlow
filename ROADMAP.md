@@ -30,7 +30,7 @@
 
 - [x] Create config.js with all env vars (fail-fast validation)
 - [x] Remove scattered process.env calls, use config
-- [ ] Add Morgan (HTTP logs) + Winston (error logs)
+- [x] Add Morgan (HTTP logs) + Winston (error logs)
 - [x] Graceful shutdown handler
 
 ---

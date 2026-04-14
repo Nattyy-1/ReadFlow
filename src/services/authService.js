@@ -5,6 +5,7 @@ import { prisma } from '../prismaClient.js';
 import sendEmail from '../utils/sendEmail.js';
 import { OAuth2Client } from 'google-auth-library';
 import { config } from '../config/index.js';
+import logger from '../utils/logger.js';
 
 class AuthService {
   constructor() {
@@ -71,6 +72,8 @@ class AuthService {
 
     const token = this.#generateToken(user);
 
+    logger.info('User registered', { userId: user.id, method: 'email' });
+
     const { password: _, ...userWithoutPassword } = user;
     return {
       user: userWithoutPassword,
@@ -90,6 +93,8 @@ class AuthService {
     }
 
     const token = this.#generateToken(user);
+
+    logger.info('User logged in', { userId: user.id });
 
     const {
       password: _,
@@ -129,6 +134,8 @@ class AuthService {
 
     if (!user) return;
 
+    logger.info('Password reset requested', { email: user.email });
+
     const resetToken = crypto.randomBytes(32).toString('hex');
 
     const hashedResetToken = crypto
@@ -165,7 +172,10 @@ class AuthService {
         message: message,
       });
     } catch (error) {
-      console.error('Failed to send password reset email', error);
+      logger.warn('Failed to send password reset email', {
+        to: user.email,
+        error: error.message
+      });
     }
   }
 
@@ -258,6 +268,8 @@ class AuthService {
 
     const token = this.#generateToken(user);
 
+    logger.info('User logged in', { userId: user.id, method: 'google' });
+
     const {
       password: _,
       resetToken: __,
@@ -289,6 +301,8 @@ class AuthService {
       where: { id: userId },
       data: updateData
     });
+
+    logger.info('Profile updated', { userId, updatedFields: Object.keys(updateData) });
 
     const {
       password: _,

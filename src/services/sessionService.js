@@ -1,5 +1,6 @@
 import { prisma } from '../prismaClient.js';
 import bookService from './bookService.js';
+import logger from '../utils/logger.js';
 
 class sessionService {
   async startSession(userId, bookId) {
@@ -32,12 +33,16 @@ class sessionService {
       await bookService.updateBookStatus(userId, bookId, 'READING');
     }
 
-    return prisma.readingSession.create({
+    const session = await prisma.readingSession.create({
       data: {
         startTime: new Date(),
         userBookId: userBook.id
       }
     });
+
+    logger.info('Reading session started', { userId, bookId, sessionId: session.id });
+
+    return session;
   }
 
   async endSession(userId, sessionId, currentPage) {
@@ -99,7 +104,16 @@ class sessionService {
     if (currentPage === totalPageCount) {
       await bookService.updateBookStatus(userId, bookId, 'COMPLETED');
       updatedSession.bookStatus = 'COMPLETED';
+      logger.info('Book completed', { userId, bookId });
     }
+
+    logger.info('Reading session ended', {
+      userId,
+      bookId,
+      sessionId,
+      pagesRead: pagesReadDuringSession,
+      duration: durationInSeconds
+    });
 
     return updatedSession;
   }
