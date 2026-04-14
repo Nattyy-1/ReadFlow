@@ -6,7 +6,7 @@ import { config } from '../config/index.js';
 const { combine, timestamp, printf, colorize, errors } = winston.format;
 
 const logFormat = printf(({ timestamp, level, message, stack, ...meta }) => {
-  let log = `${timestamp} [${level.toUpperCase()}] ${message}`;
+  let log = `${timestamp} ${message}`;
   if (Object.keys(meta).length > 0) {
     log += ` ${JSON.stringify(meta)}`;
   }
@@ -18,7 +18,11 @@ const logFormat = printf(({ timestamp, level, message, stack, ...meta }) => {
 
 const transports = [
   new winston.transports.Console({
-    format: combine(colorize(), logFormat)
+    format: combine(
+      colorize({ all: false }),
+      timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+      logFormat
+    )
   })
 ];
 
