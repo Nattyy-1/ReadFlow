@@ -3,11 +3,10 @@ import bookController from '../controllers/bookController.js';
 import asyncHandler from '../middleware/asyncHandler.js';
 import { validate } from '../middleware/validate.js';
 import * as bookSchema from '../validations/book.schema.js';
-import { strictLimiter } from '../middleware/rateLimiter.js';
 
 const router = express.Router();
 
-router.get('/search', strictLimiter, validate(bookSchema.searchBookSchema), asyncHandler(bookController.searchBook));
+router.get('/search', validate(bookSchema.searchBookSchema), asyncHandler(bookController.searchBook));
 router.post('/add', validate(bookSchema.addBookSchema), asyncHandler(bookController.addBook));
 router.get('/', validate(bookSchema.getBooksSchema), asyncHandler(bookController.getBooks));
 router.get('/:id', validate(bookSchema.getBookByIdSchema), asyncHandler(bookController.getBookById));

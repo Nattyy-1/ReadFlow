@@ -91,7 +91,7 @@ class bookService {
 
     const needsStartDate = status === 'READING' && (!existingUserBook || !existingUserBook.startDate);
 
-    return await prisma.userBook.upsert({
+    const result = await prisma.userBook.upsert({
       where: {
         userId_bookId: { userId, bookId: book.id }
       },
@@ -161,7 +161,7 @@ class bookService {
       },
       data: {
         status,
-        endDate: status === 'COMPLETED' ? new Date() : undefined,
+        endDate: status === 'COMPLETED' ? new Date() : null,
       }
     });
 

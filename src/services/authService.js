@@ -281,9 +281,11 @@ class AuthService {
   }
 
   async updateProfile(userId, username, password) {
-    if (username) {
+    const normalizedUsername = username?.toLowerCase();
+
+    if (normalizedUsername) {
       const existingUsername = await prisma.user.findFirst({
-        where: { username }
+        where: { username: normalizedUsername }
       });
       if (existingUsername && existingUsername.id !== userId) {
         const error = new Error("Username is already taken");
@@ -293,7 +295,7 @@ class AuthService {
     }
 
     const updateData = {
-      ...(username && { username }),
+      ...(normalizedUsername && { username: normalizedUsername }),
       ...(password && { password: await bcrypt.hash(password, this.saltRounds) })
     };
 

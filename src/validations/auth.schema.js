@@ -7,6 +7,7 @@ const usernameSchema = z.string()
 
 const emailSchema = z.string()
   .trim()
+  .toLowerCase()
   .min(1, "email is required")
   .email("Invalid email format");
 

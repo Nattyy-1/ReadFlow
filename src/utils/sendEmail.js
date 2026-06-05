@@ -3,7 +3,7 @@ import { config } from '../config/index.js';
 
 const sendEmail = async (options) => {
   const host = config.mail.host;
-  const port = Number(config.port);
+  const port = Number(config.mail.port);
   const user = config.mail.user;
   const pass = config.mail.password;
 
